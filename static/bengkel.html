@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#293947" />
+  <meta name="description" content="Cari dan filter contoh profil bengkel berdasarkan jenis kendaraan dan layanan yang dibutuhkan." />
+  <meta property="og:title" content="Cari Bengkel | BengkelinAI" />
+  <meta property="og:description" content="Cari dan filter contoh profil bengkel berdasarkan jenis kendaraan dan layanan yang dibutuhkan." />
+  <meta property="og:type" content="website" />
+  <title>Cari Bengkel | BengkelinAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="supabase-config.js" defer></script>
+  <script src="script.js" defer></script>
+  <script src="supabase-integration.js" defer></script>
+</head>
+<body data-page="bengkel" data-nav-group="bengkel">
+  <a class="skip-link" href="#main-content">Lewati ke konten utama</a>
+  <div class="site-shell">
+    
+<header class="site-header" id="top">
+  <div class="container nav-container">
+    <a class="brand" href="index.html" aria-label="BengkelinAI, beranda"><img src="assets/logo-bengkelinai.png" alt="Logo BengkelinAI" class="brand-logo" /></a>
+    <button class="mobile-menu-toggle" id="mobileMenuToggle" type="button" aria-label="Buka navigasi" aria-expanded="false" aria-controls="primaryNav"><span></span><span></span><span></span></button>
+    <nav class="primary-nav" id="primaryNav" aria-label="Navigasi utama">
+      <a class="nav-link" data-page-key="home" href="index.html">Beranda</a>
+      <a class="nav-link" data-page-key="fitur" href="fitur.html">Layanan</a>
+      <a class="nav-link" data-page-key="diagnosis" href="diagnosis-foto.html">Diagnosis</a>
+      <a class="nav-link" data-page-key="bengkel" href="bengkel.html">Cari Bengkel</a>
+      <a class="nav-link" data-page-key="garasi" href="garasi.html">Garasi Saya</a>
+      <a class="nav-link" data-page-key="tentang" href="tentang.html">Tentang</a>
+    </nav>
+    <div class="nav-actions"><a class="btn btn-outline btn-small auth-nav-link" id="authNavLink" href="auth.html">Masuk / Daftar</a><a class="btn btn-ghost btn-small" href="faq.html">FAQ</a><a class="btn btn-primary btn-small" href="dashboard.html">Dashboard Demo <span class="btn-arrow">↗</span></a></div>
+  </div>
+</header>
+    <main id="main-content"><section class="page-hero"><div class="container page-hero-inner"><div><span class="section-kicker">WORKSHOP FINDER</span><h1>Temukan bengkel untuk langkah berikutnya.</h1><p>Jelajahi profil contoh berdasarkan jenis kendaraan dan kategori layanan. Semua profil pada halaman ini adalah data demo.</p></div><div class="page-hero-side"><span class="page-hero-mark">B<span>AI</span></span><small>ONE APP FOR ALL YOUR VEHICLE NEEDS</small><div class="page-hero-rule"></div><span class="page-hero-chip">AUTOMOTIVE ASSISTANCE PLATFORM</span></div></div></section><section class="section section-pad" id="bengkel">
+<div class="container">
+<div class="section-heading split-heading"><div><span class="section-kicker">WORKSHOP FINDER</span><h2>Temukan bantuan<br/><span class="text-cyan">yang tepat untukmu.</span></h2></div><p>Jelajahi contoh tampilan pencarian bengkel. Data berikut adalah data demo, bukan daftar bisnis yang telah diverifikasi.</p></div>
+<div class="workshop-toolbar">
+<label class="search-field"><span class="search-icon">⌕</span><input aria-label="Cari bengkel" id="workshopSearch" placeholder="Cari nama atau layanan bengkel..." type="search"/></label>
+<select aria-label="Filter jenis kendaraan" id="workshopTypeFilter"><option value="all">Semua kendaraan</option><option value="motor">Motor</option><option value="car">Mobil</option><option value="both">Motor &amp; mobil</option></select>
+<select aria-label="Filter layanan" id="workshopServiceFilter"><option value="all">Semua layanan</option><option value="engine">Mesin</option><option value="electrical">Kelistrikan</option><option value="tire">Ban</option><option value="general">Servis umum</option></select>
+</div>
+<div class="demo-data-notice"><span>i</span> Data bengkel di bawah ini dibuat untuk mendemonstrasikan pencarian dan filter. Nama, lokasi, jadwal, dan kontak bukan data penyedia jasa terverifikasi.</div>
+<div class="workshop-grid" id="workshopGrid">
+<article class="workshop-card" data-name="Bengkel Demo Prima" data-services="engine,general" data-type="both"><div class="workshop-card-image"><img alt="Mekanik memeriksa mesin kendaraan" loading="lazy" src="https://images.pexels.com/photos/8478265/pexels-photo-8478265.jpeg?cs=srgb&amp;dl=pexels-19x14-8478265.jpg&amp;fm=jpg"/><span class="demo-tag">DATA DEMO</span></div><div class="workshop-card-body"><div class="workshop-meta"><span>Motor &amp; mobil</span><span class="workshop-distance">Area simulasi</span></div><h3>Bengkel Demo Prima</h3><p>Contoh layanan pemeriksaan mesin dan servis umum.</p><div class="service-tags"><span>Mesin</span><span>Servis umum</span></div><button class="btn btn-outline btn-full workshop-detail-btn" data-workshop="Bengkel Demo Prima" type="button">Lihat detail</button></div></article>
+<article class="workshop-card" data-name="Motorcare Demo" data-services="electrical,tire" data-type="motor"><div class="workshop-card-image"><img alt="Mekanik memperbaiki ban motor" loading="lazy" src="https://images.pexels.com/photos/3806255/pexels-photo-3806255.jpeg?cs=srgb&amp;dl=pexels-olly-3806255.jpg&amp;fm=jpg"/><span class="demo-tag">DATA DEMO</span></div><div class="workshop-card-body"><div class="workshop-meta"><span>Motor</span><span class="workshop-distance">Area simulasi</span></div><h3>Motorcare Demo</h3><p>Contoh layanan ban dan pemeriksaan kelistrikan motor.</p><div class="service-tags"><span>Ban</span><span>Kelistrikan</span></div><button class="btn btn-outline btn-full workshop-detail-btn" data-workshop="Motorcare Demo" type="button">Lihat detail</button></div></article>
+<article class="workshop-card" data-name="Auto Service Demo" data-services="engine,electrical" data-type="car"><div class="workshop-card-image"><img alt="Pemeriksaan ruang mesin mobil" loading="lazy" src="https://images.pexels.com/photos/8478239/pexels-photo-8478239.jpeg?cs=srgb&amp;dl=pexels-19x14-8478239.jpg&amp;fm=jpg"/><span class="demo-tag">DATA DEMO</span></div><div class="workshop-card-body"><div class="workshop-meta"><span>Mobil</span><span class="workshop-distance">Area simulasi</span></div><h3>Auto Service Demo</h3><p>Contoh layanan pemeriksaan mesin dan kelistrikan mobil.</p><div class="service-tags"><span>Mesin</span><span>Kelistrikan</span></div><button class="btn btn-outline btn-full workshop-detail-btn" data-workshop="Auto Service Demo" type="button">Lihat detail</button></div></article>
+</div>
+<div class="empty-state" hidden="" id="workshopEmpty"><span>⌕</span><strong>Tidak ada hasil yang cocok.</strong><p>Coba kata kunci atau filter yang berbeda.</p></div>
+</div>
+</section></main>
+    
+<footer class="site-footer">
+  <div class="container footer-main">
+    <div class="footer-brand"><img src="assets/logo-bengkelinai.png" alt="Logo BengkelinAI" /><p>One App for All Your Vehicle Needs.</p><span>Informasi awal yang membantu Kamu menentukan langkah berikutnya.</span></div>
+    <div class="footer-column"><h3>Jelajahi</h3><a href="index.html">Beranda</a><a href="cara-kerja.html">Cara Kerja</a><a href="fitur.html">Semua Fitur</a><a href="tentang.html">Tentang Kami</a></div>
+    <div class="footer-column"><h3>Layanan</h3><a href="diagnosis-foto.html">Diagnosis Foto</a><a href="analisis-suara.html">Analisis Suara</a><a href="estimasi.html">Estimasi Biaya</a><a href="bengkel.html">Cari Bengkel</a><a href="mekanik.html">Panggil Mekanik</a></div>
+    <div class="footer-column"><h3>Bantuan</h3><a href="faq.html">FAQ</a><a href="kontak.html">Kontak</a><a href="dashboard.html">Dashboard</a><a href="mitra.html">Daftar Mitra</a><a href="garasi.html">Garasi Saya</a><a href="riwayat.html">Riwayat Aktivitas</a><a href="pengingat.html">Pengingat Servis</a></div>
+  </div>
+  <div class="container footer-bottom"><span>© <span id="currentYear">2026</span> BengkelinAI. All rights reserved.</span><span class="footer-disclaimer">AI masih dalam mode simulasi. Data akun dan layanan tersimpan melalui Supabase.</span><a href="#top">Kembali ke atas ↑</a></div>
+  <div class="container photo-credits"><span>Foto stok nyata: Pexels contributors</span><a href="https://www.pexels.com/photo/a-mechanic-repairing-a-car-8478265/" target="_blank" rel="noopener">Sergey Meshkov</a><a href="https://www.pexels.com/photo/photo-of-man-fixing-a-motorcycle-3806255/" target="_blank" rel="noopener">Andrea Piacquadio</a><a href="https://www.pexels.com/photo/man-with-helmet-using-smartphone-by-motorcycle-34710439/" target="_blank" rel="noopener">Nguyễn Tiến Thịnh</a></div>
+</footer>
+<div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
+  </div>
+  <div class="modal-backdrop" hidden="" id="workshopModal">
+<section aria-labelledby="workshopModalTitle" aria-modal="true" class="workshop-modal" role="dialog">
+<button aria-label="Tutup detail bengkel" class="modal-close" data-close-workshop="" type="button">×</button>
+<span class="demo-badge">DATA DEMO</span><span class="section-kicker">WORKSHOP PROFILE</span><h2 id="workshopModalTitle">Bengkel Demo</h2><p id="workshopModalDescription">Informasi contoh untuk demonstrasi.</p><div class="modal-info-list"><div><span>Jenis data</span><strong>Simulasi, bukan bisnis terverifikasi</strong></div><div><span>Alamat</span><strong>Lokasi tidak tersedia pada mode demo</strong></div><div><span>Kontak</span><strong>Belum terhubung</strong></div></div><button class="btn btn-primary btn-full" data-close-workshop="" type="button">Tutup detail</button>
+</section>
+</div>
+</body>
+</html>

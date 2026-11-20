@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#293947" />
+  <meta name="description" content="Dashboard demo BengkelinAI dengan tautan cepat ke seluruh layanan." />
+  <meta property="og:title" content="Dashboard Demo | BengkelinAI" />
+  <meta property="og:description" content="Dashboard demo BengkelinAI dengan tautan cepat ke seluruh layanan." />
+  <meta property="og:type" content="website" />
+  <title>Riwayat Aktivitas | BengkelinAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="supabase-config.js" defer></script>
+  <script src="script.js" defer></script>
+  <script src="supabase-integration.js" defer></script>
+</head>
+<body data-page="riwayat" data-nav-group="riwayat">
+  <a class="skip-link" href="#main-content">Lewati ke konten utama</a>
+  <div class="site-shell">
+    
+<header class="site-header" id="top">
+  <div class="container nav-container">
+    <a class="brand" href="index.html" aria-label="BengkelinAI, beranda"><img src="assets/logo-bengkelinai.png" alt="Logo BengkelinAI" class="brand-logo" /></a>
+    <button class="mobile-menu-toggle" id="mobileMenuToggle" type="button" aria-label="Buka navigasi" aria-expanded="false" aria-controls="primaryNav"><span></span><span></span><span></span></button>
+    <nav class="primary-nav" id="primaryNav" aria-label="Navigasi utama">
+      <a class="nav-link" data-page-key="home" href="index.html">Beranda</a>
+      <a class="nav-link" data-page-key="fitur" href="fitur.html">Layanan</a>
+      <a class="nav-link" data-page-key="diagnosis" href="diagnosis-foto.html">Diagnosis</a>
+      <a class="nav-link" data-page-key="bengkel" href="bengkel.html">Cari Bengkel</a>
+      <a class="nav-link" data-page-key="garasi" href="garasi.html">Garasi Saya</a>
+      <a class="nav-link" data-page-key="tentang" href="tentang.html">Tentang</a>
+    </nav>
+    <div class="nav-actions"><a class="btn btn-outline btn-small auth-nav-link" id="authNavLink" href="auth.html">Masuk / Daftar</a><a class="btn btn-ghost btn-small" href="faq.html">FAQ</a><a class="btn btn-primary btn-small" href="dashboard.html">Dashboard Demo <span class="btn-arrow">↗</span></a></div>
+  </div>
+</header>
+    <main id="main-content"><section class="page-hero"><div class="container page-hero-inner"><div><span class="section-kicker">ACTIVITY CENTER</span><h1>Riwayat aktivitas.</h1><p>Lihat aktivitas demo yang pernah Kamu lakukan, mulai dari estimasi hingga permintaan layanan.</p></div><div class="page-hero-side"><span class="demo-badge">LOCAL HISTORY</span><small>YOUR ACTIVITY</small><div class="page-hero-rule"></div><span class="page-hero-chip">BROWSER STORAGE</span></div></div></section><section class="section section-pad"><div class="container"><div class="dashboard-page-head"><div><span class="section-kicker">AKTIVITAS TERBARU</span><h2>Catatan penggunaan</h2><p>Masuk untuk melihat riwayat yang tersimpan pada database akun Kamu.</p></div><button id="clearHistory" class="btn btn-outline" type="button">Hapus riwayat</button></div><div id="activityList" class="activity-list"><div class="empty-state"><span>◷</span><h3>Belum ada aktivitas</h3><p>Coba fitur estimasi, diagnosis, atau formulir layanan untuk membuat catatan demo.</p><a class="btn btn-primary" href="fitur.html">Jelajahi fitur</a></div></div></div></section></main>
+    
+<footer class="site-footer">
+  <div class="container footer-main">
+    <div class="footer-brand"><img src="assets/logo-bengkelinai.png" alt="Logo BengkelinAI" /><p>One App for All Your Vehicle Needs.</p><span>Informasi awal yang membantu Kamu menentukan langkah berikutnya.</span></div>
+    <div class="footer-column"><h3>Jelajahi</h3><a href="index.html">Beranda</a><a href="cara-kerja.html">Cara Kerja</a><a href="fitur.html">Semua Fitur</a><a href="tentang.html">Tentang Kami</a></div>
+    <div class="footer-column"><h3>Layanan</h3><a href="diagnosis-foto.html">Diagnosis Foto</a><a href="analisis-suara.html">Analisis Suara</a><a href="estimasi.html">Estimasi Biaya</a><a href="bengkel.html">Cari Bengkel</a><a href="mekanik.html">Panggil Mekanik</a></div>
+    <div class="footer-column"><h3>Bantuan</h3><a href="faq.html">FAQ</a><a href="kontak.html">Kontak</a><a href="dashboard.html">Dashboard</a><a href="mitra.html">Daftar Mitra</a><a href="garasi.html">Garasi Saya</a><a href="riwayat.html">Riwayat Aktivitas</a><a href="pengingat.html">Pengingat Servis</a></div>
+  </div>
+  <div class="container footer-bottom"><span>© <span id="currentYear">2026</span> BengkelinAI. All rights reserved.</span><span class="footer-disclaimer">AI masih dalam mode simulasi. Data akun dan layanan tersimpan melalui Supabase.</span><a href="#top">Kembali ke atas ↑</a></div>
+  <div class="container photo-credits"><span>Foto stok nyata: Pexels contributors</span><a href="https://www.pexels.com/photo/a-mechanic-repairing-a-car-8478265/" target="_blank" rel="noopener">Sergey Meshkov</a><a href="https://www.pexels.com/photo/photo-of-man-fixing-a-motorcycle-3806255/" target="_blank" rel="noopener">Andrea Piacquadio</a><a href="https://www.pexels.com/photo/man-with-helmet-using-smartphone-by-motorcycle-34710439/" target="_blank" rel="noopener">Nguyễn Tiến Thịnh</a></div>
+</footer>
+<div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
+  </div>
+  
+</body>
+</html>

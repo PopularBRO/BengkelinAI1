@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#293947" />
+  <meta name="description" content="BengkelinAI membantu memahami kemungkinan masalah kendaraan melalui informasi awal, estimasi simulasi, dan akses ke layanan bengkel." />
+  <meta property="og:title" content="Beranda | BengkelinAI" />
+  <meta property="og:description" content="BengkelinAI membantu memahami kemungkinan masalah kendaraan melalui informasi awal, estimasi simulasi, dan akses ke layanan bengkel." />
+  <meta property="og:type" content="website" />
+  <title>Beranda | BengkelinAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="supabase-config.js" defer></script>
+  <script src="script.js" defer></script>
+  <script src="supabase-integration.js" defer></script>
+</head>
+<body data-page="home" data-nav-group="home">
+  <a class="skip-link" href="#main-content">Lewati ke konten utama</a>
+  <div class="site-shell">
+    
+<header class="site-header" id="top">
+  <div class="container nav-container">
+    <a class="brand" href="index.html" aria-label="BengkelinAI, beranda"><img src="assets/logo-bengkelinai.png" alt="Logo BengkelinAI" class="brand-logo" /></a>
+    <button class="mobile-menu-toggle" id="mobileMenuToggle" type="button" aria-label="Buka navigasi" aria-expanded="false" aria-controls="primaryNav"><span></span><span></span><span></span></button>
+    <nav class="primary-nav" id="primaryNav" aria-label="Navigasi utama">
+      <a class="nav-link" data-page-key="home" href="index.html">Beranda</a>
+      <a class="nav-link" data-page-key="fitur" href="fitur.html">Layanan</a>
+      <a class="nav-link" data-page-key="diagnosis" href="diagnosis-foto.html">Diagnosis</a>
+      <a class="nav-link" data-page-key="bengkel" href="bengkel.html">Cari Bengkel</a>
+      <a class="nav-link" data-page-key="garasi" href="garasi.html">Garasi Saya</a>
+      <a class="nav-link" data-page-key="tentang" href="tentang.html">Tentang</a>
+    </nav>
+    <div class="nav-actions"><a class="btn btn-outline btn-small auth-nav-link" id="authNavLink" href="auth.html">Masuk / Daftar</a><a class="btn btn-ghost btn-small" href="faq.html">FAQ</a><a class="btn btn-primary btn-small" href="dashboard.html">Dashboard Demo <span class="btn-arrow">↗</span></a></div>
+  </div>
+</header>
+    <main id="main-content"><section class="hero-section section-pad" id="home">
+<div class="hero-grid container">
+<div class="hero-copy">
+<div class="eyebrow"><span class="eyebrow-dot"></span> Automotive assistance platform</div>
+<h1>Masalah kendaraan? <span class="text-cyan">Mulai dari memahami.</span></h1>
+<p class="hero-lead">Pahami kemungkinan masalah kendaraan melalui foto dan suara mesin, dapatkan gambaran biaya awal, lalu temukan bengkel atau mekanik untuk pemeriksaan lanjutan.</p>
+<div class="hero-actions">
+<a class="btn btn-primary btn-large" href="diagnosis-foto.html">Coba fitur demo <span class="btn-arrow">↗</span></a>
+<a class="btn btn-outline btn-large" href="cara-kerja.html">Lihat cara kerja</a>
+</div>
+<div class="hero-note"><span class="note-icon">✓</span><span>Informasi awal dengan bahasa yang mudah dipahami.</span></div>
+<div class="hero-proof-row">
+<div class="proof-item"><span class="proof-symbol">◎</span><div><strong>Lebih terarah</strong><small>Kenali langkah berikutnya</small></div></div>
+<div class="proof-item"><span class="proof-symbol">⌁</span><div><strong>Lebih praktis</strong><small>Empat kebutuhan utama</small></div></div>
+</div>
+</div>
+<div aria-label="Foto mekanik sedang memeriksa mesin mobil" class="hero-visual">
+<div class="hero-photo-frame">
+<img alt="Mekanik memeriksa ruang mesin mobil" fetchpriority="high" src="https://images.pexels.com/photos/8478265/pexels-photo-8478265.jpeg?cs=srgb&amp;dl=pexels-19x14-8478265.jpg&amp;fm=jpg"/>
+<div class="photo-shade"></div>
+<div class="visual-caption"><span class="caption-icon">✦</span><div><strong>Kenali indikasi lebih awal</strong><small>Mulai dari foto atau rekaman suara</small></div></div>
+</div>
+<div class="floating-card floating-card-top"><span class="floating-icon">⌁</span><div><small>Engine sound</small><strong>Analisis suara mesin</strong></div><span class="live-dot"></span></div>
+<div class="floating-card floating-card-bottom"><span class="floating-icon">↗</span><div><small>Next step</small><strong>Temukan bantuan profesional</strong></div></div>
+<div class="hero-orbit orbit-one"></div>
+<div class="hero-orbit orbit-two"></div>
+</div>
+</div>
+<div class="hero-bottom-line container"><span>BUILT FOR EVERYDAY DRIVERS</span><span>PHOTO · SOUND · ESTIMATE · WORKSHOP</span></div>
+</section><section aria-label="Manfaat utama BengkelinAI" class="value-strip">
+<div class="container value-grid">
+<div class="value-item"><span class="value-icon">◈</span><span><strong>Pahami kendaraan</strong><small>Informasi awal lebih jelas</small></span></div>
+<div class="value-item"><span class="value-icon">▤</span><span><strong>Gambaran biaya</strong><small>Kenali kisaran simulasi</small></span></div>
+<div class="value-item"><span class="value-icon">⌖</span><span><strong>Akses bengkel</strong><small>Lanjutkan pemeriksaan</small></span></div>
+<div class="value-item"><span class="value-icon">◉</span><span><strong>Alur sederhana</strong><small>Mudah diikuti pengguna</small></span></div>
+</div>
+</section><section class="section section-pad" id="masalah">
+<div class="container">
+<div class="section-heading centered-heading">
+<span class="section-kicker">THE PROBLEM</span>
+<h2>Saat kendaraan bermasalah,<br/><span class="text-cyan">apa langkah pertamamu?</span></h2>
+<p>Banyak pengendara mengetahui kendaraannya terasa berbeda, tetapi belum tentu tahu apa yang perlu diperiksa atau ditanyakan kepada mekanik.</p>
+</div>
+<div class="problem-grid">
+<article class="problem-card"><span class="problem-number">01</span><div class="problem-icon">?</div><h3>Tidak tahu penyebabnya</h3><p>Gejala terasa, tetapi sumber masalah belum jelas.</p></article>
+<article class="problem-card"><span class="problem-number">02</span><div class="problem-icon">Rp</div><h3>Bingung soal biaya</h3><p>Sulit menyiapkan gambaran anggaran sebelum pemeriksaan.</p></article>
+<article class="problem-card"><span class="problem-number">03</span><div class="problem-icon">⌖</div><h3>Sulit mencari bantuan</h3><p>Belum tahu bengkel atau mekanik yang sesuai kebutuhan.</p></article>
+<article class="problem-card"><span class="problem-number">04</span><div class="problem-icon">↗</div><h3>Istilah terlalu teknis</h3><p>Informasi otomotif sering terasa rumit bagi pengguna awam.</p></article>
+</div>
+<div class="solution-banner">
+<div><span class="section-kicker light-kicker">MEET BENGKELINAI</span><h3>Mulai dengan informasi.<br/><span class="text-cyan">Lanjutkan dengan pemeriksaan.</span></h3></div>
+<p>BengkelinAI membantu menghubungkan informasi awal dengan langkah yang bisa Kamu ambil berikutnya.</p>
+<a class="btn btn-primary" href="diagnosis-foto.html">Jelajahi demo <span class="btn-arrow">↗</span></a>
+</div>
+</div>
+</section>
+<section class="section section-pad section-muted">
+  <div class="container">
+    <div class="section-heading split-heading"><div><span class="section-kicker">EXPLORE THE PLATFORM</span><h2>Setiap kebutuhan punya<br /><span class="text-cyan">halamannya sendiri.</span></h2></div><p>Pilih layanan BengkelinAI sesuai kebutuhanmu. Setiap layanan memiliki halaman khusus agar informasi dan langkah pengguna lebih fokus.</p></div>
+    <div class="service-links-grid">
+      <a class="service-link-card" href="diagnosis-foto.html"><span class="service-card-icon">▧</span><span class="service-card-kicker">01 / PHOTO</span><h3>Diagnosis lewat Foto</h3><p>Unggah foto komponen kendaraan dan lihat contoh alur analisis awal.</p><strong>Buka layanan <span>↗</span></strong></a>
+      <a class="service-link-card" href="analisis-suara.html"><span class="service-card-icon">⌁</span><span class="service-card-kicker">02 / SOUND</span><h3>Analisis Suara Mesin</h3><p>Gunakan mikrofon untuk merekam dan mendengarkan kembali suara mesin.</p><strong>Buka layanan <span>↗</span></strong></a>
+      <a class="service-link-card" href="estimasi.html"><span class="service-card-icon">▤</span><span class="service-card-kicker">03 / ESTIMATE</span><h3>Estimasi Biaya</h3><p>Hitung kisaran biaya ilustratif berdasarkan kendaraan dan masalah.</p><strong>Buka layanan <span>↗</span></strong></a>
+      <a class="service-link-card" href="garasi.html"><span class="service-card-icon">▰</span><span class="service-card-kicker">05 / MY GARAGE</span><h3>Garasi Kendaraan</h3><p>Simpan data kendaraan dan kelola informasi dasarnya.</p><strong>Buka layanan <span>↗</span></strong></a><a class="service-link-card" href="pengingat.html"><span class="service-card-icon">◷</span><span class="service-card-kicker">06 / MAINTENANCE</span><h3>Pengingat Servis</h3><p>Buat jadwal perawatan dan pantau aktivitas kendaraan.</p><strong>Buka layanan <span>↗</span></strong></a><a class="service-link-card" href="bengkel.html"><span class="service-card-icon">⚒</span><span class="service-card-kicker">04 / WORKSHOP</span><h3>Pencarian Bengkel</h3><p>Jelajahi contoh pencarian bengkel berdasarkan jenis dan layanan.</p><strong>Buka layanan <span>↗</span></strong></a>
+    </div>
+  </div>
+</section>
+<section class="section section-pad">
+  <div class="container home-final-cta"><div><span class="section-kicker light-kicker">YOUR NEXT STEP</span><h2>Mulai pahami kendaraanmu<br /><span class="text-cyan">bersama BengkelinAI.</span></h2><p>Gunakan demo untuk mengenal alur fitur dan menyiapkan langkah pemeriksaan berikutnya.</p></div><div class="home-final-actions"><a class="btn btn-primary btn-large" href="diagnosis-foto.html">Coba Diagnosis Foto ↗</a><a class="btn btn-ghost-light" href="cara-kerja.html">Pelajari cara kerja</a></div></div>
+</section></main>
+    
+<footer class="site-footer">
+  <div class="container footer-main">
+    <div class="footer-brand"><img src="assets/logo-bengkelinai.png" alt="Logo BengkelinAI" /><p>One App for All Your Vehicle Needs.</p><span>Informasi awal yang membantu Kamu menentukan langkah berikutnya.</span></div>
+    <div class="footer-column"><h3>Jelajahi</h3><a href="index.html">Beranda</a><a href="cara-kerja.html">Cara Kerja</a><a href="fitur.html">Semua Fitur</a><a href="tentang.html">Tentang Kami</a></div>
+    <div class="footer-column"><h3>Layanan</h3><a href="diagnosis-foto.html">Diagnosis Foto</a><a href="analisis-suara.html">Analisis Suara</a><a href="estimasi.html">Estimasi Biaya</a><a href="bengkel.html">Cari Bengkel</a><a href="mekanik.html">Panggil Mekanik</a></div>
+    <div class="footer-column"><h3>Bantuan</h3><a href="faq.html">FAQ</a><a href="kontak.html">Kontak</a><a href="dashboard.html">Dashboard</a><a href="mitra.html">Daftar Mitra</a><a href="garasi.html">Garasi Saya</a><a href="riwayat.html">Riwayat Aktivitas</a><a href="pengingat.html">Pengingat Servis</a></div>
+  </div>
+  <div class="container footer-bottom"><span>© <span id="currentYear">2026</span> BengkelinAI. All rights reserved.</span><span class="footer-disclaimer">AI masih dalam mode simulasi. Data akun dan layanan tersimpan melalui Supabase.</span><a href="#top">Kembali ke atas ↑</a></div>
+  <div class="container photo-credits"><span>Foto stok nyata: Pexels contributors</span><a href="https://www.pexels.com/photo/a-mechanic-repairing-a-car-8478265/" target="_blank" rel="noopener">Sergey Meshkov</a><a href="https://www.pexels.com/photo/photo-of-man-fixing-a-motorcycle-3806255/" target="_blank" rel="noopener">Andrea Piacquadio</a><a href="https://www.pexels.com/photo/man-with-helmet-using-smartphone-by-motorcycle-34710439/" target="_blank" rel="noopener">Nguyễn Tiến Thịnh</a></div>
+</footer>
+<div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
+  </div>
+  
+</body>
+</html>

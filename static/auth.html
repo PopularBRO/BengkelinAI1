@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#293947" />
+  <meta name="description" content="Masuk atau buat akun BengkelinAI untuk menyimpan kendaraan, riwayat diagnosis, estimasi, dan jadwal servis." />
+  <title>Masuk / Daftar | BengkelinAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="supabase-config.js" defer></script>
+  <script src="supabase-integration.js" defer></script>
+</head>
+<body data-page="auth" data-nav-group="auth">
+  <a class="skip-link" href="#main-content">Lewati ke konten utama</a>
+  <div class="site-shell">
+    <header class="site-header" id="top"><div class="container nav-container">
+      <a class="brand" href="index.html" aria-label="BengkelinAI, beranda"><img src="assets/logo-bengkelinai.png" alt="Logo BengkelinAI" class="brand-logo" /></a>
+      <a class="btn btn-ghost btn-small" href="index.html">Kembali ke beranda</a>
+    </div></header>
+    <main id="main-content" class="auth-page">
+      <div class="container">
+        <div class="auth-shell">
+          <aside class="auth-aside">
+            <div>
+              <img class="auth-logo" src="assets/logo-bengkelinai.png" alt="BengkelinAI" />
+              <h1>Semua kebutuhan kendaraan, lebih terarah.</h1>
+              <p>Masuk untuk menyimpan garasi kendaraan, riwayat pemeriksaan, estimasi biaya, dan pengingat servis di akun BengkelinAI.</p>
+            </div>
+            <div class="auth-aside-foot">One App for All Your Vehicle Needs</div>
+          </aside>
+          <section class="auth-main" aria-label="Autentikasi BengkelinAI">
+            <div class="auth-tabs" role="tablist" aria-label="Pilih autentikasi">
+              <button class="auth-tab active" id="showSignIn" type="button" role="tab" aria-selected="true">Masuk</button>
+              <button class="auth-tab" id="showSignUp" type="button" role="tab" aria-selected="false">Buat akun</button>
+            </div>
+            <form class="auth-form" id="signInForm">
+              <h2>Selamat datang kembali.</h2>
+              <p>Masuk dengan email atau akun Google Kamu.</p>
+              <div class="auth-field"><label for="signInEmail">Email</label><input id="signInEmail" name="email" type="email" autocomplete="email" placeholder="nama@email.com" required /></div>
+              <div class="auth-field"><label for="signInPassword">Password</label><input id="signInPassword" name="password" type="password" autocomplete="current-password" minlength="8" placeholder="Minimal 8 karakter" required /></div>
+              <button class="auth-submit" type="submit">Masuk ke BengkelinAI</button>
+              <button class="auth-hint" id="forgotPasswordBtn" type="button">Lupa password?</button>
+            </form>
+            <form class="auth-form" id="signUpForm" hidden>
+              <h2>Buat akun BengkelinAI.</h2>
+              <p>Akun baru akan mendapatkan role Customer secara default. Role mekanik, bengkel, dan admin memerlukan proses persetujuan.</p>
+              <div class="auth-field"><label for="signUpName">Nama lengkap</label><input id="signUpName" name="full_name" autocomplete="name" minlength="2" placeholder="Nama lengkap" required /></div>
+              <div class="auth-field"><label for="signUpPhone">Nomor telepon</label><input id="signUpPhone" name="phone" type="tel" autocomplete="tel" placeholder="08xxxxxxxxxx" /></div>
+              <div class="auth-field"><label for="signUpEmail">Email</label><input id="signUpEmail" name="email" type="email" autocomplete="email" placeholder="nama@email.com" required /></div>
+              <div class="auth-field"><label for="signUpPassword">Password</label><input id="signUpPassword" name="password" type="password" autocomplete="new-password" minlength="8" placeholder="Minimal 8 karakter" required /></div>
+              <button class="auth-submit" type="submit">Daftar akun</button>
+            </form>
+            <form class="auth-form" id="recoveryForm" hidden>
+              <h2>Buat password baru.</h2>
+              <p>Masukkan password baru untuk akun BengkelinAI Kamu.</p>
+              <div class="auth-field"><label for="newPassword">Password baru</label><input id="newPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="Minimal 8 karakter" /></div>
+              <button class="auth-submit" type="submit">Simpan password baru</button>
+            </form>
+            <div class="auth-divider">atau</div>
+            <button class="auth-google" id="googleSignInBtn" type="button">◉ &nbsp; Lanjutkan dengan Google</button>
+            <div class="auth-message" id="authMessage" role="status" aria-live="polite" hidden></div>
+            <p class="auth-hint">Dengan melanjutkan, Kamu menyetujui penggunaan data akun untuk menyediakan fitur BengkelinAI. Jangan gunakan akun ini untuk mengirim data kendaraan milik orang lain tanpa izin.</p>
+            <p class="auth-hint" id="supabaseConfigHint">Koneksi database perlu dikonfigurasi oleh pengelola website.</p>
+          </section>
+        </div>
+      </div>
+    </main>
+    <footer class="site-footer"><div class="container footer-bottom"><span>© <span id="currentYear">2026</span> BengkelinAI.</span><a href="faq.html">Pusat bantuan</a></div></footer>
+    <div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
+  </div>
+</body>
+</html>

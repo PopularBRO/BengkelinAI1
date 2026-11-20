@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#293947" />
+  <meta name="description" content="Rekam dan putar ulang suara mesin melalui browser untuk mencoba alur analisis suara BengkelinAI." />
+  <meta property="og:title" content="Analisis Suara Mesin | BengkelinAI" />
+  <meta property="og:description" content="Rekam dan putar ulang suara mesin melalui browser untuk mencoba alur analisis suara BengkelinAI." />
+  <meta property="og:type" content="website" />
+  <title>Analisis Suara Mesin | BengkelinAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="supabase-config.js" defer></script>
+  <script src="script.js" defer></script>
+  <script src="supabase-integration.js" defer></script>
+</head>
+<body data-page="analisis-suara" data-nav-group="diagnosis">
+  <a class="skip-link" href="#main-content">Lewati ke konten utama</a>
+  <div class="site-shell">
+    
+<header class="site-header" id="top">
+  <div class="container nav-container">
+    <a class="brand" href="index.html" aria-label="BengkelinAI, beranda"><img src="assets/logo-bengkelinai.png" alt="Logo BengkelinAI" class="brand-logo" /></a>
+    <button class="mobile-menu-toggle" id="mobileMenuToggle" type="button" aria-label="Buka navigasi" aria-expanded="false" aria-controls="primaryNav"><span></span><span></span><span></span></button>
+    <nav class="primary-nav" id="primaryNav" aria-label="Navigasi utama">
+      <a class="nav-link" data-page-key="home" href="index.html">Beranda</a>
+      <a class="nav-link" data-page-key="fitur" href="fitur.html">Layanan</a>
+      <a class="nav-link" data-page-key="diagnosis" href="diagnosis-foto.html">Diagnosis</a>
+      <a class="nav-link" data-page-key="bengkel" href="bengkel.html">Cari Bengkel</a>
+      <a class="nav-link" data-page-key="garasi" href="garasi.html">Garasi Saya</a>
+      <a class="nav-link" data-page-key="tentang" href="tentang.html">Tentang</a>
+    </nav>
+    <div class="nav-actions"><a class="btn btn-outline btn-small auth-nav-link" id="authNavLink" href="auth.html">Masuk / Daftar</a><a class="btn btn-ghost btn-small" href="faq.html">FAQ</a><a class="btn btn-primary btn-small" href="dashboard.html">Dashboard Demo <span class="btn-arrow">↗</span></a></div>
+  </div>
+</header>
+    <main id="main-content"><section class="page-hero"><div class="container page-hero-inner"><div><span class="section-kicker">AI ENGINE SOUND</span><h1>Dengarkan kondisi mesin.</h1><p>Rekam suara mesin melalui mikrofon perangkat, putar kembali rekaman, lalu lihat contoh ringkasan hasil.</p></div><div class="page-hero-side"><span class="page-hero-mark">B<span>AI</span></span><small>ONE APP FOR ALL YOUR VEHICLE NEEDS</small><div class="page-hero-rule"></div><span class="page-hero-chip">AUTOMOTIVE ASSISTANCE PLATFORM</span></div></div></section><section class="section section-pad section-muted"><div class="container page-tool-layout"><div class="page-tool-copy"><span class="section-kicker">02 / AUDIO INPUT</span><h2>Rekam suara sebagai informasi tambahan.</h2><p>Rekaman dapat membantu pengguna menjelaskan kapan dan seperti apa suara yang terdengar. Simpan jarak aman dari bagian kendaraan yang bergerak dan hindari merekam di area berbahaya.</p><ul class="check-list"><li>Mulai dan hentikan rekaman</li><li>Lihat durasi rekaman</li><li>Putar ulang audio lokal</li></ul><div class="info-callout"><strong>Privasi demo</strong><p>Audio direkam dan diputar di browser. Demo ini tidak mengunggah audio dan belum memiliki model analisis suara AI.</p></div></div><div class="page-tool-visual"><img src="https://images.pexels.com/photos/8478239/pexels-photo-8478239.jpeg?cs=srgb&amp;dl=pexels-19x14-8478239.jpg&amp;fm=jpg" alt="Mekanik sedang memeriksa kompartemen mesin mobil" loading="lazy" /></div></div></section><section class="section section-pad"><div class="container"><div class="section-heading"><span class="section-kicker">TRY SOUND ANALYSIS</span><h2>Rekam suara mesin.</h2><p>Gunakan browser modern melalui localhost atau HTTPS dan izinkan akses mikrofon.</p></div><div class="demo-workspace standalone-workspace"><div class="demo-main"><div class="demo-panel standalone-demo-panel" data-demo-panel=""="" id="soundDemo">
+<div class="demo-panel-heading"><div><span class="section-kicker">DEMO 02</span><h3>Rekam suara mesin</h3><p>Rekam suara kendaraan melalui mikrofon perangkat Kamu.</p></div><span class="demo-badge">SIMULASI ANALISIS</span></div>
+<div class="recorder-card">
+<div class="recorder-visual"><div class="sound-orb"><span>⌁</span></div><div aria-hidden="true" class="wave-bars" id="waveBars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+<div class="record-time" id="recordTime">00:00</div>
+<div class="recorder-status" id="recorderStatus">Siap merekam suara mesin</div>
+<div class="recorder-buttons"><button class="btn btn-primary" id="recordBtn" type="button"><span class="record-dot"></span> Mulai rekam</button><button class="btn btn-outline" disabled="" id="stopRecordBtn" type="button">Berhenti</button></div>
+<label class="consent-check"><input id="diagnosisSaveConsent" type="checkbox"/><span>Saya setuju menyimpan rekaman ini secara privat di akun BengkelinAI untuk riwayat. Analisis tetap simulasi.</span></label>
+<audio controls=""="" id="audioPlayback"></audio>
+<div class="recorder-footnote" id="recorderFootnote">Browser akan meminta izin mikrofon. Gunakan HTTPS atau localhost agar akses mikrofon berfungsi.</div>
+</div>
+<div class="demo-actions"><button class="btn btn-primary" disabled="" id="analyzeSoundBtn" type="button">Analisis rekaman <span class="btn-arrow">↗</span></button><button class="btn btn-ghost-light btn-small" id="clearSoundBtn" type="button">Hapus rekaman</button></div>
+<div aria-live="polite" class="analysis-result"="" id="soundResult"><div class="result-topline"><span class="result-check">✓</span><div><strong>Contoh ringkasan suara</strong><small>SIMULASI · Audio tidak dianalisis oleh AI</small></div></div><div class="result-content"><span class="result-label">RINGKASAN DEMO</span><h4>Perlu pemeriksaan lebih lanjut</h4><p>Demo ini hanya memperlihatkan alur rekaman dan playback. Tidak ada model analisis suara yang berjalan di belakang layar.</p><div class="result-next"><strong>Rekomendasi</strong><span>Catat kapan suara muncul dan minta mekanik memeriksa kendaraan secara langsung.</span></div></div></div>
+</div></div></div></div></section></main>
+    
+<footer class="site-footer">
+  <div class="container footer-main">
+    <div class="footer-brand"><img src="assets/logo-bengkelinai.png" alt="Logo BengkelinAI" /><p>One App for All Your Vehicle Needs.</p><span>Informasi awal yang membantu Kamu menentukan langkah berikutnya.</span></div>
+    <div class="footer-column"><h3>Jelajahi</h3><a href="index.html">Beranda</a><a href="cara-kerja.html">Cara Kerja</a><a href="fitur.html">Semua Fitur</a><a href="tentang.html">Tentang Kami</a></div>
+    <div class="footer-column"><h3>Layanan</h3><a href="diagnosis-foto.html">Diagnosis Foto</a><a href="analisis-suara.html">Analisis Suara</a><a href="estimasi.html">Estimasi Biaya</a><a href="bengkel.html">Cari Bengkel</a><a href="mekanik.html">Panggil Mekanik</a></div>
+    <div class="footer-column"><h3>Bantuan</h3><a href="faq.html">FAQ</a><a href="kontak.html">Kontak</a><a href="dashboard.html">Dashboard</a><a href="mitra.html">Daftar Mitra</a><a href="garasi.html">Garasi Saya</a><a href="riwayat.html">Riwayat Aktivitas</a><a href="pengingat.html">Pengingat Servis</a></div>
+  </div>
+  <div class="container footer-bottom"><span>© <span id="currentYear">2026</span> BengkelinAI. All rights reserved.</span><span class="footer-disclaimer">AI masih dalam mode simulasi. Data akun dan layanan tersimpan melalui Supabase.</span><a href="#top">Kembali ke atas ↑</a></div>
+  <div class="container photo-credits"><span>Foto stok nyata: Pexels contributors</span><a href="https://www.pexels.com/photo/a-mechanic-repairing-a-car-8478265/" target="_blank" rel="noopener">Sergey Meshkov</a><a href="https://www.pexels.com/photo/photo-of-man-fixing-a-motorcycle-3806255/" target="_blank" rel="noopener">Andrea Piacquadio</a><a href="https://www.pexels.com/photo/man-with-helmet-using-smartphone-by-motorcycle-34710439/" target="_blank" rel="noopener">Nguyễn Tiến Thịnh</a></div>
+</footer>
+<div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
+  </div>
+  
+</body>
+</html>
