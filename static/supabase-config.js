@@ -4,6 +4,6 @@
    NEVER put a service_role or secret key in this file. This file is public in the browser.
 */
 window.BENGKELINAI_SUPABASE_CONFIG = {
-  url: 'https://YOUR_PROJECT_REF.supabase.co',
-  publishableKey: 'YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY'
+  url: 'https://ftobpnpzdinhlfkctzb.supabase.co',
+  publishableKey: 'sb_publishable_nI-weapEpSPk7WL5R5LBiQ_zvlmSC5A'
 };
