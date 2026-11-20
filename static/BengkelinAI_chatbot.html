@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#293947" />
+  <meta name="description" content="Asisten otomotif BengkelinAI. Ceritakan gejala kendaraan dan dapatkan panduan awal yang mudah dipahami." />
+  <meta property="og:title" content="AI Chatbot | BengkelinAI" />
+  <meta property="og:description" content="Asisten otomotif BengkelinAI untuk membantu memahami gejala kendaraan." />
+  <meta property="og:type" content="website" />
+  <title>AI Chatbot | BengkelinAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="chatbot.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="supabase-config.js" defer></script>
+  <script src="script.js" defer></script>
+  <script src="supabase-integration.js" defer></script>
+  <script src="chatbot.js" defer></script>
+</head>
+<body data-page="chatbot" data-nav-group="chatbot">
+  <a class="skip-link" href="#main-content">Lewati ke konten utama</a>
+  <div class="site-shell">
+    <header class="site-header" id="top">
+      <div class="container nav-container">
+        <a class="brand" href="index.html" aria-label="BengkelinAI, beranda">
+          <img src="assets/logo-bengkelinai.png" alt="Logo BengkelinAI" class="brand-logo" />
+        </a>
+        <button class="mobile-menu-toggle" id="mobileMenuToggle" type="button" aria-label="Buka navigasi" aria-expanded="false" aria-controls="primaryNav"><span></span><span></span><span></span></button>
+        <nav class="primary-nav" id="primaryNav" aria-label="Navigasi utama">
+          <a class="nav-link" data-page-key="home" href="index.html">Beranda</a>
+          <a class="nav-link" data-page-key="fitur" href="fitur.html">Layanan</a>
+          <a class="nav-link" data-page-key="diagnosis" href="diagnosis-foto.html">Diagnosis</a>
+          <a class="nav-link" data-page-key="bengkel" href="bengkel.html">Cari Bengkel</a>
+          <a class="nav-link" data-page-key="garasi" href="garasi.html">Garasi Saya</a>
+          <a class="nav-link" data-page-key="tentang" href="tentang.html">Tentang</a>
+        </nav>
+        <div class="nav-actions">
+          <a class="btn btn-outline btn-small auth-nav-link" id="authNavLink" href="auth.html">Masuk / Daftar</a>
+          <a class="btn btn-ghost btn-small" href="faq.html">FAQ</a>
+          <a class="btn btn-primary btn-small" href="dashboard.html">Dashboard Demo <span class="btn-arrow">↗</span></a>
+        </div>
+      </div>
+    </header>
+
+    <main id="main-content" class="assistant-page">
+      <section class="assistant-intro">
+        <div class="container assistant-intro-inner">
+          <div>
+            <span class="section-kicker">BENGKELINAI AUTOMOTIVE ASSISTANT</span>
+            <h1>Teman diskusi untuk <span class="text-cyan">masalah kendaraanmu.</span></h1>
+            <p>Ceritakan gejala yang Kamu alami. Asisten akan membantu menyusun kemungkinan area pemeriksaan, pertanyaan lanjutan, dan langkah aman berikutnya.</p>
+          </div>
+          <div class="assistant-intro-meta">
+            <span class="assistant-status-dot"></span>
+            <div><strong>Mode panduan simulasi</strong><small>Belum menggunakan model AI generatif</small></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="container assistant-workspace-section" aria-label="Ruang percakapan Asisten BengkelinAI">
+        <div class="assistant-workspace">
+          <aside class="assistant-sidebar" aria-label="Daftar percakapan dan konteks kendaraan">
+            <div class="assistant-sidebar-top">
+              <div>
+                <span class="assistant-overline">RUANG KERJA</span>
+                <h2>Percakapan</h2>
+              </div>
+              <button class="assistant-icon-btn" id="newChatBtn" type="button" aria-label="Buat percakapan baru" title="Percakapan baru">＋</button>
+            </div>
+
+            <div class="assistant-history-heading"><span>Riwayat chat</span><button id="clearLocalHistoryBtn" type="button">Bersihkan</button></div>
+            <div class="assistant-history-list" id="chatHistoryList" aria-live="polite">
+              <div class="assistant-history-empty">Belum ada percakapan. Mulai chat pertamamu.</div>
+            </div>
+
+            <div class="assistant-context-card">
+              <div class="assistant-context-heading"><span class="assistant-context-icon">▣</span><div><strong>Konteks kendaraan</strong><small>Opsional, untuk membantu percakapan</small></div></div>
+              <label class="assistant-field"><span>Jenis kendaraan</span>
+                <select id="contextVehicleType"><option value="motorcycle">Sepeda motor</option><option value="car">Mobil</option></select>
+              </label>
+              <label class="assistant-field"><span>Merek</span><input id="contextBrand" type="text" maxlength="50" placeholder="Contoh: Honda" /></label>
+              <label class="assistant-field"><span>Model</span><input id="contextModel" type="text" maxlength="60" placeholder="Contoh: Vario 160" /></label>
+              <div class="assistant-context-row">
+                <label class="assistant-field"><span>Tahun</span><input id="contextYear" type="number" min="1980" max="2100" placeholder="2022" /></label>
+                <label class="assistant-field"><span>Odometer (km)</span><input id="contextOdometer" type="number" min="0" max="2000000" placeholder="42000" /></label>
+              </div>
+              <button class="assistant-context-save" id="saveVehicleContextBtn" type="button">Simpan konteks</button>
+              <p class="assistant-context-note" id="contextSaveNote">Informasi ini hanya digunakan sebagai konteks percakapan.</p>
+            </div>
+          </aside>
+
+          <section class="assistant-chat-panel" aria-label="Pesan dengan Asisten BengkelinAI">
+            <div class="assistant-chat-header">
+              <div class="assistant-identity">
+                <span class="assistant-avatar"><img src="assets/logo-bengkelinai.png" alt="" /></span>
+                <div><h2>Asisten BengkelinAI</h2><p><span class="assistant-status-dot"></span> Panduan otomotif · Simulasi</p></div>
+              </div>
+              <div class="assistant-chat-header-actions">
+                <span class="assistant-demo-pill">DEMO</span>
+                <button class="assistant-icon-btn" id="exportChatBtn" type="button" title="Salin percakapan" aria-label="Salin percakapan">▤</button>
+              </div>
+            </div>
+
+            <div class="assistant-chat-scroll" id="chatMessages" role="log" aria-live="polite" aria-relevant="additions text">
+              <div class="assistant-welcome" id="chatWelcome">
+                <span class="assistant-welcome-mark">✳</span>
+                <span class="assistant-overline">SELAMAT DATANG DI BENGKELINAI</span>
+                <h3>Ada yang terasa berbeda pada kendaraanmu?</h3>
+                <p>Ceritakan gejalanya dengan bahasa sehari-hari. Tidak perlu tahu nama komponen atau istilah teknisnya.</p>
+                <div class="assistant-prompt-grid">
+                  <button type="button" class="assistant-prompt-card" data-prompt="Mesin kendaraan saya sulit dinyalakan, terutama saat pagi hari."><span>◉</span><strong>Mesin sulit dinyalakan</strong><small>Starter, aki, atau pengapian</small></button>
+                  <button type="button" class="assistant-prompt-card" data-prompt="Rem terasa kurang pakem dan jarak pengereman lebih panjang."><span>⌁</span><strong>Rem terasa kurang pakem</strong><small>Pedal, kampas, atau sistem hidrolik</small></button>
+                  <button type="button" class="assistant-prompt-card" data-prompt="Ada suara berdecit atau bunyi aneh saat kendaraan berjalan."><span>♫</span><strong>Muncul suara aneh</strong><small>Lokasi dan kondisi saat bunyi muncul</small></button>
+                  <button type="button" class="assistant-prompt-card" data-prompt="Suhu mesin naik lebih tinggi dari biasanya."><span>♨</span><strong>Suhu mesin meningkat</strong><small>Sistem pendingin dan tanda bahaya</small></button>
+                </div>
+              </div>
+            </div>
+
+            <div class="assistant-suggestion-row" id="suggestionRow" aria-label="Pertanyaan cepat">
+              <button type="button" data-prompt="Apa yang sebaiknya saya periksa lebih dulu?">Apa yang diperiksa dulu?</button>
+              <button type="button" data-prompt="Apa tanda bahaya yang membuat saya harus berhenti berkendara?">Tanda bahaya</button>
+              <button type="button" data-prompt="Apa informasi yang perlu saya sampaikan kepada mekanik?">Tanya mekanik</button>
+            </div>
+
+            <form class="assistant-composer" id="chatForm">
+              <label class="sr-only" for="chatInput">Tulis pesan untuk Asisten BengkelinAI</label>
+              <textarea id="chatInput" rows="1" maxlength="1600" placeholder="Ceritakan gejala kendaraanmu…" required></textarea>
+              <div class="assistant-composer-bottom">
+                <span id="chatInputHint">Enter untuk kirim · Shift + Enter untuk baris baru</span>
+                <div class="assistant-composer-actions"><span id="chatCharCount">0/1600</span><button class="assistant-send-btn" id="sendMessageBtn" type="submit" aria-label="Kirim pesan"><span>Kirim</span><b>↑</b></button></div>
+              </div>
+            </form>
+            <div class="assistant-chat-disclaimer">Mode simulasi. Informasi bukan diagnosis final dan tidak menggantikan pemeriksaan mekanik profesional.</div>
+          </section>
+
+          <aside class="assistant-info-rail" aria-label="Informasi dan bantuan">
+            <div class="assistant-info-card assistant-info-primary">
+              <span class="assistant-info-icon">✳</span>
+              <span class="assistant-overline">CARA MENGGUNAKAN</span>
+              <h3>Mulai dari gejala, bukan tebakan part.</h3>
+              <ol class="assistant-how-list">
+                <li><span>01</span><p>Ceritakan kapan dan bagaimana gejala muncul.</p></li>
+                <li><span>02</span><p>Tambahkan jenis kendaraan dan jarak tempuh.</p></li>
+                <li><span>03</span><p>Ikuti pertanyaan klarifikasi dan checklist awal.</p></li>
+              </ol>
+            </div>
+            <div class="assistant-info-card">
+              <span class="assistant-overline">PENTING UNTUK KESELAMATAN</span>
+              <h3>Jangan lanjut berkendara bila ada tanda bahaya.</h3>
+              <ul class="assistant-danger-list">
+                <li>Rem gagal atau pedal rem tiba-tiba amblas.</li>
+                <li>Mesin terlalu panas atau lampu tekanan oli menyala.</li>
+                <li>Asap, bau bahan bakar kuat, atau kebocoran besar.</li>
+                <li>Ban rusak, kemudi tidak stabil, atau roda bergetar hebat.</li>
+              </ul>
+            </div>
+            <div class="assistant-info-card assistant-links-card">
+              <span class="assistant-overline">LANJUTKAN DI BENGKELINAI</span>
+              <a href="diagnosis-foto.html">Diagnosis lewat foto <span>↗</span></a>
+              <a href="analisis-suara.html">Analisis suara mesin <span>↗</span></a>
+              <a href="estimasi.html">Estimasi biaya <span>↗</span></a>
+              <a href="bengkel.html">Cari bengkel <span>↗</span></a>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-main">
+        <div class="footer-brand"><img src="assets/logo-bengkelinai.png" alt="Logo BengkelinAI" /><p>One App for All Your Vehicle Needs.</p><span>Informasi awal yang membantu Kamu menentukan langkah berikutnya.</span></div>
+        <div class="footer-column"><h3>Jelajahi</h3><a href="index.html">Beranda</a><a href="fitur.html">Semua Fitur</a><a href="tentang.html">Tentang Kami</a><a href="chatbot.html">AI Chatbot</a></div>
+        <div class="footer-column"><h3>Layanan</h3><a href="diagnosis-foto.html">Diagnosis Foto</a><a href="analisis-suara.html">Analisis Suara</a><a href="estimasi.html">Estimasi Biaya</a><a href="bengkel.html">Cari Bengkel</a></div>
+        <div class="footer-column"><h3>Bantuan</h3><a href="faq.html">FAQ</a><a href="kontak.html">Kontak</a><a href="dashboard.html">Dashboard</a><a href="mitra.html">Daftar Mitra</a></div>
+      </div>
+      <div class="container footer-bottom"><span>© <span id="currentYear">2026</span> BengkelinAI. All rights reserved.</span><span class="footer-disclaimer">Asisten saat ini berjalan dalam mode simulasi. Perlu pemeriksaan profesional untuk memastikan penyebab masalah.</span><a href="#top">Kembali ke atas ↑</a></div>
+    </footer>
+    <div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
+  </div>
+</body>
+</html>
