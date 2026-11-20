@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#293947" />
+  <meta name="description" content="Buat estimasi biaya kendaraan BengkelinAI dengan rincian kandidat part, jasa, bahan pendukung, dan rentang biaya simulasi." />
+  <meta property="og:title" content="Estimasi Biaya Terperinci | BengkelinAI" />
+  <meta property="og:description" content="Lihat rincian komponen dan biaya perbaikan kendaraan secara transparan." />
+  <meta property="og:type" content="website" />
+  <title>Estimasi Biaya Terperinci | BengkelinAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="estimasi-detail.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="supabase-config.js" defer></script>
+  <script src="script.js" defer></script>
+  <script src="supabase-integration.js" defer></script>
+  <script src="estimasi-detail.js" defer></script>
+</head>
+<body data-page="estimasi" data-nav-group="diagnosis">
+  <a class="skip-link" href="#main-content">Lewati ke konten utama</a>
+  <div class="site-shell">
+<header class="site-header" id="top">
+  <div class="container nav-container">
+    <a class="brand" href="index.html" aria-label="BengkelinAI, beranda"><img src="assets/logo-bengkelinai.png" alt="Logo BengkelinAI" class="brand-logo" /></a>
+    <button class="mobile-menu-toggle" id="mobileMenuToggle" type="button" aria-label="Buka navigasi" aria-expanded="false" aria-controls="primaryNav"><span></span><span></span><span></span></button>
+    <nav class="primary-nav" id="primaryNav" aria-label="Navigasi utama">
+      <a class="nav-link" data-page-key="home" href="index.html">Beranda</a>
+      <a class="nav-link" data-page-key="fitur" href="fitur.html">Layanan</a>
+      <a class="nav-link" data-page-key="diagnosis" href="diagnosis-foto.html">Diagnosis</a>
+      <a class="nav-link" data-page-key="bengkel" href="bengkel.html">Cari Bengkel</a>
+      <a class="nav-link" data-page-key="garasi" href="garasi.html">Garasi Saya</a>
+      <a class="nav-link" data-page-key="tentang" href="tentang.html">Tentang</a>
+    </nav>
+    <div class="nav-actions"><a class="btn btn-outline btn-small auth-nav-link" id="authNavLink" href="auth.html">Masuk / Daftar</a><a class="btn btn-ghost btn-small" href="faq.html">FAQ</a><a class="btn btn-primary btn-small" href="dashboard.html">Dashboard Demo <span class="btn-arrow">↗</span></a></div>
+  </div>
+</header>
+    <main id="main-content">
+      <section class="page-hero">
+        <div class="container page-hero-inner">
+          <div>
+            <span class="section-kicker">REPAIR COST ESTIMATION</span>
+            <h1>Rincian biaya sebelum ke bengkel.</h1>
+            <p>Telusuri kemungkinan komponen yang perlu diperiksa, rentang harga part, jasa pengerjaan, dan biaya pendukung berdasarkan kendaraan serta gejala yang Kamu pilih.</p>
+          </div>
+          <div class="page-hero-side">
+            <span class="page-hero-mark">B<span>AI</span></span>
+            <small>ONE APP FOR ALL YOUR VEHICLE NEEDS</small>
+            <div class="page-hero-rule"></div>
+            <span class="page-hero-chip">DETAILED COST BREAKDOWN</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-pad section-muted">
+        <div class="container estimate-pro-shell">
+          <div class="estimate-intro-row">
+            <div>
+              <span class="section-kicker">BENGKELINAI COST PLANNER</span>
+              <h2>Periksa setiap kemungkinan biaya.</h2>
+              <p>Masukkan data kendaraan dan pilih gejala yang Kamu rasakan. BengkelinAI akan menyusun daftar kandidat part, pekerjaan jasa, dan biaya tambahan yang relevan untuk dibahas dengan mekanik.</p>
+            </div>
+            <span class="estimate-demo-pill">MODE SIMULASI · IDR</span>
+          </div>
+
+          <div class="estimate-step-grid" aria-label="Tahapan estimasi">
+            <div class="estimate-step"><span class="estimate-step-number">01</span><span><strong>Data kendaraan</strong><small>Jenis, merek, model, tahun, kilometer</small></span></div>
+            <div class="estimate-step"><span class="estimate-step-number">02</span><span><strong>Masalah & gejala</strong><small>Kategori, gejala, tingkat kondisi</small></span></div>
+            <div class="estimate-step"><span class="estimate-step-number">03</span><span><strong>Rincian biaya</strong><small>Part, jasa, tambahan, dan total</small></span></div>
+          </div>
+
+          <div class="estimate-card estimate-form-wrap">
+            <div class="estimate-card-head">
+              <div>
+                <span class="section-kicker">ESTIMATOR INPUT</span>
+                <h3>Data kendaraan dan keluhan</h3>
+                <p>Semakin lengkap informasi yang diberikan, semakin terarah daftar komponen yang ditampilkan.</p>
+              </div>
+              <span class="demo-badge">SIMULASI</span>
+            </div>
+            <div class="estimate-card-body">
+              <form id="detailedEstimatorForm" novalidate>
+                <section class="estimate-form-section" aria-labelledby="vehicleSectionTitle">
+                  <h4 class="estimate-section-title" id="vehicleSectionTitle"><span class="number">1</span> Identitas kendaraan</h4>
+                  <div class="estimate-fields">
+                    <div class="estimate-field">
+                      <label for="detailVehicleType">Jenis kendaraan *</label>
+                      <select id="detailVehicleType" name="vehicle_type" required>
+                        <option value="motor">Sepeda motor</option>
+                        <option value="car">Mobil</option>
+                      </select>
+                    </div>
+                    <div class="estimate-field">
+                      <label for="detailBrand">Merek *</label>
+                      <input id="detailBrand" name="brand" required maxlength="60" placeholder="Contoh: Honda, Toyota, Yamaha" />
+                    </div>
+                    <div class="estimate-field">
+                      <label for="detailModel">Model / varian *</label>
+                      <input id="detailModel" name="model" required maxlength="80" placeholder="Contoh: Vario 160, Avanza G" />
+                    </div>
+                    <div class="estimate-field">
+                      <label for="detailYear">Tahun kendaraan *</label>
+                      <input id="detailYear" name="year" type="number" min="1980" max="2026" value="2022" required />
+                    </div>
+                    <div class="estimate-field">
+                      <label for="detailOdometer">Odometer (km)</label>
+                      <input id="detailOdometer" name="odometer" type="number" min="0" max="2000000" placeholder="Contoh: 42500" />
+                    </div>
+                    <div class="estimate-field">
+                      <label for="detailSegment">Kelas / kapasitas kendaraan</label>
+                      <select id="detailSegment" name="segment"></select>
+                    </div>
+                    <div class="estimate-field">
+                      <label for="detailTransmission">Transmisi</label>
+                      <select id="detailTransmission" name="transmission">
+                        <option value="Tidak dipilih">Tidak dipilih</option>
+                        <option value="Manual">Manual</option>
+                        <option value="Automatic / CVT">Automatic / CVT</option>
+                        <option value="Automatic konvensional">Automatic konvensional</option>
+                        <option value="AMT / DCT">AMT / DCT</option>
+                      </select>
+                    </div>
+                    <div class="estimate-field">
+                      <label for="detailArea">Kota / area servis</label>
+                      <input id="detailArea" name="area" maxlength="80" placeholder="Contoh: Semarang" />
+                      <small class="hint">Lokasi dicatat sebagai konteks; belum menjadi pengali harga otomatis.</small>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="estimate-form-section" aria-labelledby="problemSectionTitle">
+                  <h4 class="estimate-section-title" id="problemSectionTitle"><span class="number">2</span> Masalah dan gejala</h4>
+                  <div class="estimate-fields">
+                    <div class="estimate-field">
+                      <label for="detailCategory">Area masalah *</label>
+                      <select id="detailCategory" name="category" required></select>
+                      <small class="hint" id="detailCategoryHelp">Pilih area yang paling mendekati keluhan.</small>
+                    </div>
+                    <div class="estimate-field">
+                      <label for="detailSeverity">Tingkat kondisi *</label>
+                      <select id="detailSeverity" name="severity" required>
+                        <option value="unknown">Belum diketahui</option>
+                        <option value="light">Ringan</option>
+                        <option value="medium">Sedang</option>
+                        <option value="heavy">Berat</option>
+                      </select>
+                    </div>
+                    <div class="estimate-field">
+                      <label for="detailNotes">Catatan tambahan</label>
+                      <input id="detailNotes" name="notes" maxlength="300" placeholder="Contoh: muncul saat mesin panas" />
+                    </div>
+                  </div>
+                  <div class="estimate-symptom-toolbar">
+                    <p>Pilih satu atau lebih gejala yang Kamu alami. Pilihan ini menentukan kandidat komponen.</p>
+                    <span class="section-kicker">MULTI SELECT</span>
+                  </div>
+                  <div class="estimate-symptoms" id="detailSymptoms"></div>
+                  <div class="estimate-option-row">
+                    <label class="estimate-option"><input id="includeInspection" type="checkbox" checked /><span><strong>Sertakan pemeriksaan awal</strong><small>Menambahkan rentang biaya inspeksi dasar.</small></span></label>
+                    <label class="estimate-option"><input id="includeConsumables" type="checkbox" checked /><span><strong>Sertakan bahan pendukung</strong><small>Cleaner, grease, dan bahan kecil sesuai pekerjaan.</small></span></label>
+                  </div>
+                </section>
+
+                <div class="estimate-form-actions">
+                  <p>Data kendaraan dan gejala digunakan untuk membuat perincian simulasi. Komponen belum dinyatakan rusak sebelum diperiksa langsung oleh mekanik.</p>
+                  <button class="btn btn-primary" type="submit">Buat rincian estimasi <span class="btn-arrow">↗</span></button>
+                </div>
+                <div class="estimate-error" id="detailEstimateError" role="alert" hidden></div>
+              </form>
+            </div>
+          </div>
+
+          <section class="estimate-results estimate-card" id="detailEstimateResult" aria-live="polite" hidden>
+            <div class="estimate-results-head">
+              <div>
+                <span class="section-kicker">ESTIMATE SUMMARY · SIMULATION</span>
+                <h3>Rincian estimasi kendaraan</h3>
+                <p id="detailResultVehicle"></p>
+                <p id="detailResultSummary"></p>
+              </div>
+              <div class="estimate-total-block">
+                <small>ESTIMASI TOTAL</small>
+                <strong id="detailTotalRange">Rp0 – Rp0</strong>
+                <span>Rentang minimum hingga maksimum</span>
+              </div>
+            </div>
+            <div class="estimate-result-body">
+              <div class="estimate-summary-chips">
+                <span class="estimate-summary-chip" id="detailItemCount">0 kandidat part</span>
+                <span class="estimate-summary-chip">Harga ilustratif</span>
+                <span class="estimate-summary-chip">Belum termasuk konfirmasi bengkel</span>
+              </div>
+              <div class="estimate-cost-cards">
+                <div class="estimate-cost-card"><small>Part / komponen</small><strong id="detailPartSubtotal">Rp0 – Rp0</strong><span>Rentang harga komponen</span></div>
+                <div class="estimate-cost-card"><small>Jasa pengerjaan</small><strong id="detailLaborSubtotal">Rp0 – Rp0</strong><span>Rentang biaya tenaga kerja</span></div>
+                <div class="estimate-cost-card"><small>Pemeriksaan & tambahan</small><strong id="detailExtraSubtotal">Rp0 – Rp0</strong><span>Inspeksi dan bahan pendukung</span></div>
+                <div class="estimate-cost-card"><small>Total keseluruhan</small><strong id="detailTotalCard">-</strong><span>Penjumlahan seluruh item</span></div>
+              </div>
+
+              <div class="estimate-breakdown-title"><h4>A. Daftar part / komponen</h4><span>Belum tentu semuanya perlu diganti</span></div>
+              <div id="detailPartsRows"></div>
+
+              <div class="estimate-breakdown-title"><h4>B. Jasa pengerjaan</h4><span>Biaya tenaga kerja bengkel</span></div>
+              <div id="detailLaborRows"></div>
+
+              <div class="estimate-breakdown-title"><h4>C. Pemeriksaan dan bahan pendukung</h4><span>Item tambahan yang dipilih</span></div>
+              <div id="detailExtrasRows"></div>
+
+              <div class="estimate-breakdown-title"><h4>D. Checklist pemeriksaan mekanik</h4><span>Hal yang sebaiknya diverifikasi</span></div>
+              <div class="estimate-inspection-grid" id="detailChecks"></div>
+
+              <div class="estimate-recommendation">
+                <strong>Langkah yang disarankan</strong>
+                <p id="detailRecommendation"></p>
+              </div>
+              <div class="estimate-assumption">
+                <strong>Asumsi dan batasan estimasi</strong>
+                <ul id="detailAssumptions"></ul>
+                <p>Harga bukan kutipan resmi dari bengkel, distributor, atau merek suku cadang. BengkelinAI belum memeriksa kendaraan secara fisik dan belum menjalankan model AI pada kalkulator ini.</p>
+              </div>
+              <div class="estimate-result-actions">
+                <button class="btn btn-primary" type="button" id="saveDetailedEstimate">Simpan ke riwayat akun</button>
+                <button class="btn btn-outline" type="button" id="copyDetailedEstimate">Salin rincian</button>
+                <button class="btn btn-outline" type="button" id="printDetailedEstimate">Cetak / simpan PDF</button>
+                <span class="estimate-save-status" id="detailSaveStatus">Belum disimpan ke akun.</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="estimate-history" aria-labelledby="estimateHistoryHeading">
+            <div class="section-heading"><span class="section-kicker">ACCOUNT HISTORY</span><h2 id="estimateHistoryHeading">Estimasi tersimpan</h2><p>Riwayat estimasi dari akun BengkelinAI yang sedang login.</p></div>
+            <div class="estimate-history-list" id="estimateHistoryList"><div class="estimate-empty-lines">Memuat riwayat akun...</div></div>
+          </section>
+
+          <div class="estimate-method-grid">
+            <article class="estimate-method-card"><strong>1. Harga part</strong><p>Setiap komponen memiliki rentang harga ilustratif. Kode part, merek, kualitas OEM/aftermarket, dan stok dapat mengubah nilai aktual.</p></article>
+            <article class="estimate-method-card"><strong>2. Jasa mekanik</strong><p>Jasa dihitung terpisah dari part. Tingkat kondisi dan kelas kendaraan memengaruhi rentang jasa simulasi.</p></article>
+            <article class="estimate-method-card"><strong>3. Konfirmasi bengkel</strong><p>Minta bengkel mengonfirmasi hasil pemeriksaan, kode komponen, jumlah, garansi part, dan rincian jasa sebelum menyetujui pekerjaan.</p></article>
+          </div>
+        </div>
+      </section>
+    </main>
+<footer class="site-footer">
+  <div class="container footer-main">
+    <div class="footer-brand"><img src="assets/logo-bengkelinai.png" alt="Logo BengkelinAI" /><p>One App for All Your Vehicle Needs.</p><span>Informasi awal yang membantu Kamu menentukan langkah berikutnya.</span></div>
+    <div class="footer-column"><h3>Jelajahi</h3><a href="index.html">Beranda</a><a href="cara-kerja.html">Cara Kerja</a><a href="fitur.html">Semua Fitur</a><a href="tentang.html">Tentang Kami</a></div>
+    <div class="footer-column"><h3>Layanan</h3><a href="diagnosis-foto.html">Diagnosis Foto</a><a href="analisis-suara.html">Analisis Suara</a><a href="estimasi.html">Estimasi Biaya</a><a href="bengkel.html">Cari Bengkel</a><a href="mekanik.html">Panggil Mekanik</a></div>
+    <div class="footer-column"><h3>Bantuan</h3><a href="faq.html">FAQ</a><a href="kontak.html">Kontak</a><a href="dashboard.html">Dashboard</a><a href="mitra.html">Daftar Mitra</a><a href="garasi.html">Garasi Saya</a><a href="riwayat.html">Riwayat Aktivitas</a><a href="pengingat.html">Pengingat Servis</a></div>
+  </div>
+  <div class="container footer-bottom"><span>© <span id="currentYear">2026</span> BengkelinAI. All rights reserved.</span><span class="footer-disclaimer">AI masih dalam mode simulasi. Data akun dan layanan tersimpan melalui Supabase.</span><a href="#top">Kembali ke atas ↑</a></div>
+  <div class="container photo-credits"><span>Foto stok nyata: Pexels contributors</span><a href="https://www.pexels.com/photo/a-mechanic-repairing-a-car-8478265/" target="_blank" rel="noopener">Sergey Meshkov</a><a href="https://www.pexels.com/photo/photo-of-man-fixing-a-motorcycle-3806255/" target="_blank" rel="noopener">Andrea Piacquadio</a><a href="https://www.pexels.com/photo/man-with-helmet-using-smartphone-by-motorcycle-34710439/" target="_blank" rel="noopener">Nguyễn Tiến Thịnh</a></div>
+</footer>
+    <div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
+  </div>
+</body>
+</html>
