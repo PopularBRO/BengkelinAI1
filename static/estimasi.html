@@ -104,6 +104,18 @@
                   <div class="estimate-fields estimate-fields-two">
                     <div class="estimate-field"><label for="detailCategory">Kategori sistem kendaraan *</label><select id="detailCategory" name="category" required></select><small id="detailCategoryHelp" class="hint">Kategori akan menyesuaikan jenis kendaraan.</small></div>
                     <div class="estimate-field"><label for="detailSubcategory">Sub-kategori / area pemeriksaan *</label><select id="detailSubcategory" name="subcategory" required></select><small id="detailSubcategoryHelp" class="hint">Pilih area yang lebih spesifik.</small></div>
+                    <div class="estimate-field estimate-field-wide" id="detailStartBehaviorWrap" hidden>
+                      <label for="detailStartBehavior">Saat tombol START ditekan, apa yang terjadi?</label>
+                      <select id="detailStartBehavior" name="start_behavior">
+                        <option value="unknown">Belum yakin / belum diperiksa</option>
+                        <option value="no_crank">Tidak ada putaran starter dan tidak ada suara</option>
+                        <option value="click">Terdengar bunyi klik, tetapi mesin tidak berputar</option>
+                        <option value="slow_crank">Mesin berputar pelan / terasa berat</option>
+                        <option value="crank_no_start">Starter memutar mesin normal, tetapi mesin tidak menyala</option>
+                        <option value="intermittent">Kadang normal, kadang gagal saat distarter</option>
+                      </select>
+                      <small class="hint">Jawaban ini penting. Starter yang tidak berputar berbeda penyebab dan biaya penanganannya dari mesin yang berputar tetapi tidak menyala.</small>
+                    </div>
                     <div class="estimate-field"><label for="detailSeverity">Tingkat kondisi menurut Kamu *</label><select id="detailSeverity" name="severity" required><option value="unknown">Belum diketahui</option><option value="light">Ringan — masih bisa digunakan normal</option><option value="medium">Sedang — mengganggu penggunaan</option><option value="heavy">Berat — sangat mengganggu / berisiko</option></select></div>
                     <div class="estimate-field"><label for="detailTiming">Kapan gejala muncul?</label><select id="detailTiming" name="timing"><option value="any">Tidak menentu / selalu</option><option value="cold_start">Saat mesin dingin / awal dinyalakan</option><option value="hot_engine">Saat mesin sudah panas</option><option value="idle">Saat langsam / berhenti</option><option value="acceleration">Saat akselerasi / menambah gas</option><option value="braking">Saat mengerem</option><option value="turning">Saat berbelok</option><option value="rough_road">Saat melewati jalan tidak rata</option><option value="high_speed">Pada kecepatan tertentu</option></select></div>
                     <div class="estimate-field"><label for="detailFrequency">Seberapa sering?</label><select id="detailFrequency" name="frequency"><option value="always">Hampir selalu</option><option value="often">Sering</option><option value="sometimes">Kadang-kadang</option><option value="rare">Jarang / baru sekali</option></select></div>
@@ -128,9 +140,9 @@
                   <h4 class="estimate-section-title" id="costOptionTitle"><span class="number">3</span> Atur komponen perhitungan</h4>
                   <div class="estimate-option-row estimate-option-row-detailed">
                     <label class="estimate-option"><input id="includeInspection" type="checkbox" checked /><span><strong>Pemeriksaan awal</strong><small>Inspeksi visual, pencatatan gejala dan pengecekan dasar.</small></span></label>
-                    <label class="estimate-option"><input id="includeScanner" type="checkbox" checked /><span><strong>Scan ECU / OBD bila mendukung</strong><small>Tidak semua kendaraan mendukung fitur atau protokol yang sama.</small></span></label>
+                    <label class="estimate-option"><input id="includeScanner" type="checkbox" /><span><strong>Scan ECU / OBD bila mendukung</strong><small>Tidak semua kendaraan mendukung fitur atau protokol yang sama.</small></span></label>
                     <label class="estimate-option"><input id="includeRoadTest" type="checkbox" /><span><strong>Uji jalan terkontrol</strong><small>Hanya jika kendaraan dinilai aman untuk diuji.</small></span></label>
-                    <label class="estimate-option"><input id="includeConsumables" type="checkbox" checked /><span><strong>Bahan pendukung</strong><small>Cleaner, grease, washer, cable ties dan bahan kecil terkait.</small></span></label>
+                    <label class="estimate-option"><input id="includeConsumables" type="checkbox" /><span><strong>Bahan pendukung</strong><small>Cleaner, grease, washer, cable ties dan bahan kecil terkait.</small></span></label>
                   </div>
                 </section>
                 <div class="estimate-form-actions"><p>Harga merupakan simulasi. Sistem menampilkan kandidat komponen berdasarkan keluhan. Jangan mengganti part tanpa pemeriksaan, pengukuran dan verifikasi mekanik.</p><button class="btn btn-primary" type="submit">Buat rincian estimasi <span class="btn-arrow">↗</span></button></div>
@@ -140,12 +152,13 @@
           </div>
 
           <section class="estimate-results estimate-card" id="detailEstimateResult" aria-live="polite" hidden>
-            <div class="estimate-results-head"><div><span class="section-kicker">ESTIMATE SUMMARY · SIMULATION</span><h3>Rincian estimasi kendaraan</h3><p id="detailResultVehicle"></p><p id="detailResultSummary"></p></div><div class="estimate-total-block"><small>ESTIMASI TOTAL</small><strong id="detailTotalRange">Rp0 – Rp0</strong><span>Rentang ilustratif minimum hingga maksimum</span></div></div>
+            <div class="estimate-results-head"><div><span class="section-kicker">ESTIMATE SUMMARY · SIMULATION</span><h3>Rincian estimasi kendaraan</h3><p id="detailResultVehicle"></p><p id="detailResultSummary"></p></div><div class="estimate-total-block"><small>ESTIMASI SAAT INI</small><strong id="detailTotalRange">Rp0 – Rp0</strong><span>Pemeriksaan dan item yang benar-benar dipilih. Opsi perbaikan alternatif ditampilkan terpisah.</span></div></div>
             <div class="estimate-result-body">
-              <div class="estimate-summary-chips"><span class="estimate-summary-chip" id="detailItemCount">0 item</span><span class="estimate-summary-chip">Harga simulasi</span><span class="estimate-summary-chip">Perlu verifikasi bengkel</span></div>
+              <div class="estimate-summary-chips"><span class="estimate-summary-chip" id="detailItemCount">Kandidat item belum dihitung</span><span class="estimate-summary-chip">Harga referensi / simulasi</span><span class="estimate-summary-chip">Verifikasi mekanik wajib</span></div>
               <div id="detailUrgency" class="estimate-urgency"></div>
-              <div class="estimate-cost-cards"><div class="estimate-cost-card"><small>Part / komponen</small><strong id="detailPartSubtotal">Rp0 – Rp0</strong><span>Rentang harga komponen</span></div><div class="estimate-cost-card"><small>Jasa mekanik</small><strong id="detailLaborSubtotal">Rp0 – Rp0</strong><span>Rentang pekerjaan</span></div><div class="estimate-cost-card"><small>Pemeriksaan & tambahan</small><strong id="detailExtraSubtotal">Rp0 – Rp0</strong><span>Item pendukung</span></div><div class="estimate-cost-card"><small>Total keseluruhan</small><strong id="detailTotalCard">Rp0 – Rp0</strong><span>Penjumlahan item yang dipilih</span></div></div>
-              <div class="estimate-edit-note">Kamu bisa menghapus centang item yang tidak ingin dihitung atau mengubah jumlahnya. Item tetap merupakan kandidat pemeriksaan, bukan kewajiban penggantian.</div>
+              <section id="detailConditionScenarios" class="estimate-condition-panel" hidden></section>
+              <div class="estimate-cost-cards"><div class="estimate-cost-card"><small>Part yang dipilih</small><strong id="detailPartSubtotal">Belum dipilih</strong><span>Kandidat tidak otomatis dimasukkan</span></div><div class="estimate-cost-card"><small>Jasa yang dipilih</small><strong id="detailLaborSubtotal">Belum dipilih</strong><span>Jasa perbaikan tidak otomatis dimasukkan</span></div><div class="estimate-cost-card"><small>Pemeriksaan & tambahan</small><strong id="detailExtraSubtotal">Rp0 – Rp0</strong><span>Hanya opsi yang dicentang</span></div><div class="estimate-cost-card"><small>Total saat ini</small><strong id="detailTotalCard">Rp0 – Rp0</strong><span>Jumlah item terpilih saja</span></div></div>
+              <div class="estimate-edit-note">Part dan jasa kandidat sengaja tidak dihitung otomatis. Centang hanya item yang sudah dikonfirmasi atau yang ingin Kamu masukkan ke simulasi. Paket perbaikan alternatif tidak dijumlahkan satu sama lain.</div>
               <div class="estimate-breakdown-title"><h4>A. Daftar part / komponen</h4><span>Harga simulasi per unit / set</span></div><div id="detailPartsRows"></div>
               <div class="estimate-breakdown-title"><h4>B. Jasa pengerjaan</h4><span>Biaya tenaga kerja bengkel</span></div><div id="detailLaborRows"></div>
               <div class="estimate-breakdown-title"><h4>C. Pemeriksaan dan bahan pendukung</h4><span>Opsi yang Kamu pilih</span></div><div id="detailExtrasRows"></div>
@@ -173,17 +186,6 @@
   <div class="container photo-credits"><span>Foto stok nyata: Pexels contributors</span><a href="https://www.pexels.com/photo/a-mechanic-repairing-a-car-8478265/" target="_blank" rel="noopener">Sergey Meshkov</a><a href="https://www.pexels.com/photo/photo-of-man-fixing-a-motorcycle-3806255/" target="_blank" rel="noopener">Andrea Piacquadio</a><a href="https://www.pexels.com/photo/man-with-helmet-using-smartphone-by-motorcycle-34710439/" target="_blank" rel="noopener">Nguyễn Tiến Thịnh</a></div>
 </footer>
     <div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
-  </div>
-
-  <div class="bai-chat-widget" id="baiChatWidget">
-    <section class="bai-chat-panel" id="baiChatPanel" aria-label="Asisten BengkelinAI" hidden>
-      <header class="bai-chat-header"><div class="bai-chat-avatar">AI</div><div class="bai-chat-title"><strong>Asisten BengkelinAI</strong><small><span class="bai-chat-status-dot"></span> Panduan simulasi aktif</small></div><button type="button" id="baiChatClear" class="bai-chat-icon-btn" aria-label="Reset percakapan">↻</button><button type="button" id="baiChatClose" class="bai-chat-icon-btn" aria-label="Tutup chat">×</button></header>
-      <div class="bai-chat-notice">Mode demo: jawaban berbasis panduan dan aturan lokal. Belum terhubung ke model AI eksternal.</div>
-      <div class="bai-chat-messages" id="baiChatMessages" aria-live="polite"></div>
-      <div class="bai-chat-quick-prompts"><button class="bai-chat-quick" type="button" data-message="Bantu saya memilih kategori masalah.">Bantu pilih kategori</button><button class="bai-chat-quick" type="button" data-message="Apakah semua part harus diganti?">Apakah semua part harus diganti?</button><button class="bai-chat-quick" type="button" data-message="Bagaimana membaca rincian estimasi?">Cara membaca estimasi</button></div>
-      <form class="bai-chat-form" id="baiChatForm"><input id="baiChatInput" type="text" maxlength="500" autocomplete="off" placeholder="Ceritakan gejala kendaraan..." aria-label="Pesan untuk Asisten BengkelinAI"/><button type="submit" aria-label="Kirim pesan">Kirim</button></form>
-    </section>
-    <button class="bai-chat-toggle" id="baiChatToggle" type="button" aria-expanded="false" aria-controls="baiChatPanel"><span class="bai-chat-toggle-icon">✦</span><span>Tanya BengkelinAI</span></button>
   </div>
 </body>
 </html>

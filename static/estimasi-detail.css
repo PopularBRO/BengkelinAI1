@@ -51,3 +51,28 @@
 @media(max-width:720px){.estimate-intro-row{display:block}.estimate-demo-pill{margin-top:14px}.estimate-card-head,.estimate-card-body,.estimate-results-head,.estimate-result-body{padding:17px}.estimate-fields,.estimate-fields-four,.estimate-fields-two{grid-template-columns:1fr}.estimate-fields .estimate-field-wide{grid-column:auto}.estimate-symptoms,.estimate-inspection-grid{grid-template-columns:1fr}.estimate-warning-grid,.estimate-option-row{grid-template-columns:1fr}.estimate-form-actions{align-items:stretch;flex-direction:column}.estimate-form-actions .btn{width:100%}.estimate-cost-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.estimate-method-grid{grid-template-columns:1fr}.estimate-results-head{flex-direction:column}.estimate-total-block{text-align:left;min-width:0}.estimate-total-block strong{font-size:24px}.estimate-result-actions{display:grid;grid-template-columns:1fr}.estimate-result-actions .btn{width:100%}.estimate-history-item{align-items:flex-start;flex-direction:column}.estimate-step-grid-four{grid-template-columns:1fr}.estimate-symptom-toolbar{align-items:flex-start;flex-direction:column}.bai-chat-widget{right:13px;bottom:13px}.bai-chat-panel{right:-2px;width:min(370px,calc(100vw - 20px));height:min(570px,calc(100vh - 100px))}.bai-chat-toggle{min-height:49px;padding:0 14px}}
 @media(prefers-reduced-motion:reduce){.estimate-symptom,.bai-chat-toggle{transition:none}.bai-chat-typing .bai-chat-bubble span{animation:none}}
 @media print{.site-header,.site-footer,.skip-link,.estimate-form-wrap,.estimate-result-actions,.toast-region,.bai-chat-widget{display:none!important}.estimate-results{display:block!important;margin:0}.estimate-card{box-shadow:none;border:0}.estimate-results-head{-webkit-print-color-adjust:exact;print-color-adjust:exact}.estimate-result-body{padding:10px}.estimate-item-table-wrap,.estimate-line-table{break-inside:avoid}}
+
+
+/* ================================================================
+   ESTIMATOR V3 — CONDITION-AWARE, NO AUTOMATIC PART SUMMATION
+   ================================================================ */
+.estimate-condition-panel{margin:0 0 18px;padding:18px;border:1px solid #dceaf0;border-radius:15px;background:#f8fcfd}
+.estimate-condition-panel[hidden]{display:none!important}
+.estimate-condition-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:13px}
+.estimate-condition-head h4{margin:0;color:#293947;font:800 15px Manrope,sans-serif}
+.estimate-condition-head p{margin:5px 0 0;color:#6c7f89;font-size:11px;line-height:1.65}
+.estimate-condition-status{flex:0 0 auto;padding:6px 9px;border-radius:20px;background:#e8f9fd;color:#146b84;font-size:9px;font-weight:800}
+.estimate-scenario-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+.estimate-scenario-card{display:flex;flex-direction:column;gap:8px;padding:14px;border:1px solid #dfe9ed;border-radius:12px;background:#fff;min-width:0}
+.estimate-scenario-card.is-selected{border:2px solid #38CFFC;background:#f1fbfe;box-shadow:0 0 0 3px rgba(56,207,252,.10)}
+.estimate-scenario-card small{color:#7a8a93;font-size:9px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.estimate-scenario-card strong{color:#293947;font:800 19px Manrope,sans-serif;letter-spacing:-.03em}
+.estimate-scenario-card p{margin:0;color:#687b86;font-size:10px;line-height:1.6}
+.estimate-scenario-card .scenario-tag{align-self:flex-start;padding:4px 7px;border-radius:20px;background:#edf7fa;color:#4d6875;font-size:9px;font-weight:800}
+.estimate-condition-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:13px}
+.estimate-condition-check{padding:10px 11px;border:1px solid #e3ecef;border-radius:9px;background:#fff;color:#526773;font-size:10px;line-height:1.55}
+.estimate-price-source{margin-top:12px;padding-top:10px;border-top:1px solid #e0ebef;color:#71828b;font-size:9px;line-height:1.6}
+.estimate-price-source a{color:#087e9d;text-decoration:underline;text-underline-offset:2px}
+.estimate-note-warning{margin-top:10px;padding:10px 12px;border-left:3px solid #38CFFC;border-radius:8px;background:#effaff;color:#526d78;font-size:10px;line-height:1.65}
+.estimate-line-table th:last-child{min-width:150px}
+@media(max-width:760px){.estimate-scenario-grid{grid-template-columns:1fr}.estimate-condition-head{display:block}.estimate-condition-status{display:inline-flex;margin-top:8px}.estimate-condition-list{grid-template-columns:1fr}}

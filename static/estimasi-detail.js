@@ -380,9 +380,9 @@
 
   const SEVERITY = {
     unknown:{label:'Belum diketahui',labor:1,note:'Tingkat kondisi belum dapat dipastikan dari deskripsi pengguna.'},
-    light:{label:'Ringan',labor:.95,note:'Asumsi pekerjaan relatif sederhana dan akses komponen normal.'},
-    medium:{label:'Sedang',labor:1.15,note:'Asumsi mungkin membutuhkan pembongkaran atau pemeriksaan tambahan.'},
-    heavy:{label:'Berat',labor:1.35,note:'Asumsi pekerjaan lebih kompleks. Pemeriksaan langsung sangat disarankan.'}
+    light:{label:'Ringan',labor:1,note:'Prioritaskan inspeksi, pembersihan atau penyetelan. Penggantian part belum diasumsikan.'},
+    medium:{label:'Sedang',labor:1.12,note:'Pemeriksaan lebih terarah mungkin diperlukan. Perbaikan sub-komponen hanya jika hasil tes mendukung.'},
+    heavy:{label:'Berat',labor:1.25,note:'Ruang lingkup kerja dapat lebih besar, tetapi overhaul atau penggantian satu unit tetap harus dibuktikan lewat pemeriksaan.'}
   };
   const SEGMENTS = {
     motor:[['under150','Motor harian sampai 150 cc',1],['150to250','Motor 150–250 cc',1.12],['above250','Motor di atas 250 cc / premium',1.32]],
@@ -390,8 +390,8 @@
   };
   const PART_TIERS = {economy:{label:'Aftermarket ekonomis',factor:.88},oem:{label:'OEM-equivalent',factor:1},original:{label:'Original / genuine',factor:1.38}};
   const EXTRAS = {
-    motor:{inspection:[25000,85000],scanner:[0,0],roadTest:[15000,60000],consumables:[10000,45000]},
-    car:{inspection:[65000,180000],scanner:[75000,300000],roadTest:[30000,110000],consumables:[25000,95000]}
+    motor:{inspection:[25000,75000],scanner:[0,0],roadTest:[15000,60000],consumables:[10000,45000]},
+    car:{inspection:[75000,150000],scanner:[75000,150000],roadTest:[30000,110000],consumables:[15000,50000]}
   };
 
   function initEstimator() {
@@ -417,7 +417,11 @@
     }
     function renderSegments() {
       const kind = typeEl.value;
-      $('#detailSegment').innerHTML = SEGMENTS[kind].map(([id,label]) => `<option value="${id}">${esc(label)}</option>`).join('');
+      const segment = $('#detailSegment');
+      const previous = segment.value;
+      segment.innerHTML = SEGMENTS[kind].map(([id,label]) => `<option value="${id}">${esc(label)}</option>`).join('');
+      const validPrevious = SEGMENTS[kind].some(item => item[0] === previous);
+      segment.value = validPrevious ? previous : (kind === 'car' ? 'compact' : 'under150');
       const transmission = $('#detailTransmission');
       transmission.innerHTML = kind === 'motor'
         ? '<option value="matic">Matic / CVT</option><option value="manual">Manual / kopling</option><option value="other">Lainnya / tidak tahu</option>'
@@ -433,12 +437,20 @@
       if (categories.some(c => c.id === previous)) categoryEl.value = previous;
       renderSubcategories();
     }
+    function updateStartBehaviorVisibility() {
+      const wrap = $('#detailStartBehaviorWrap');
+      if (!wrap) return;
+      const isStarting = currentSub()?.id === 'starting';
+      wrap.hidden = !isStarting;
+      if (!isStarting) $('#detailStartBehavior').value = 'unknown';
+    }
     function renderSubcategories() {
       const system = currentSystem();
       const previous = subcategoryEl.value;
       subcategoryEl.innerHTML = system.subcategories.map(s => `<option value="${s.id}">${esc(s.label)}</option>`).join('');
       if (system.subcategories.some(s => s.id === previous)) subcategoryEl.value = previous;
       renderSymptoms();
+      updateStartBehaviorVisibility();
       $('#detailCategoryHelp').textContent = system.description;
     }
     function renderSymptoms() {
@@ -463,7 +475,8 @@
     }
     typeEl.addEventListener('change', () => { renderSegments(); renderCategories(); clearOldResult(); });
     categoryEl.addEventListener('change', () => { renderSubcategories(); clearOldResult(); });
-    subcategoryEl.addEventListener('change', () => { renderSymptoms(); clearOldResult(); });
+    subcategoryEl.addEventListener('change', () => { renderSymptoms(); updateStartBehaviorVisibility(); clearOldResult(); });
+    $('#detailStartBehavior')?.addEventListener('change', clearOldResult);
     renderSegments();
     renderCategories();
 
@@ -474,11 +487,11 @@
       const laborIds = [...new Set(symptomList.flatMap(s => s.labor))];
       const parts = partIds.map(id => {
         const p = PARTS[id]; if (!p || !p[kind] || p[kind][1] === 0) return null;
-        return {id,name:p.name,note:p.note,unit:p.unit,qty:1,included:true,min:round(p[kind][0] * partFactor * segmentFactor),max:round(p[kind][1] * partFactor * segmentFactor)};
+        return {id,name:p.name,note:p.note,unit:p.unit,qty:1,included:false,kind:'candidate',min:round(p[kind][0] * partFactor * segmentFactor),max:round(p[kind][1] * partFactor * segmentFactor)};
       }).filter(Boolean);
-      const labor = laborIds.map(id => {
+      const labor = laborIds.filter(id => id !== 'inspection').map(id => {
         const p = LABOR[id]; if (!p || !p[kind] || p[kind][1] === 0) return null;
-        return {id,name:p.name,note:p.note,unit:'jasa',qty:1,included:true,min:round(p[kind][0] * segmentFactor * laborFactor),max:round(p[kind][1] * segmentFactor * laborFactor)};
+        return {id,name:p.name,note:p.note,unit:'jasa',qty:1,included:false,kind:'candidate',min:round(p[kind][0] * segmentFactor * laborFactor),max:round(p[kind][1] * segmentFactor * laborFactor)};
       }).filter(Boolean);
       return {parts,labor};
     }
@@ -511,7 +524,8 @@
       const timing = $('#detailTiming').value;
       const frequency = $('#detailFrequency').value;
       const checks = [...new Set(symptoms.flatMap(s => s.checks))];
-      const urgent = symptoms.some(s => s.urgency === 'urgent') || warnings.includes('brake') || warnings.includes('overheat') || warnings.includes('fuel') || warnings.includes('tire');
+      const startBehavior = $('#detailStartBehavior')?.value || 'unknown';
+      const urgent = symptoms.some(s => s.urgency === 'urgent' && !['c_no_start','m_no_start'].includes(s.id)) || warnings.includes('brake') || warnings.includes('overheat') || warnings.includes('fuel') || warnings.includes('tire');
       const vehicle = {
         type:kind === 'motor' ? 'Sepeda motor' : 'Mobil', dbType:kind === 'motor' ? 'motorcycle' : 'car',
         brand,model,year,odometer,segment:segmentId,
@@ -522,18 +536,146 @@
         category:system.id,categoryLabel:system.label,subcategory:sub.id,subcategoryLabel:sub.label,
         severity:severityId,severityLabel:severity.label,severityNote:severity.note,
         symptoms:symptoms.map(s => ({id:s.id,label:s.label,help:s.help,urgency:s.urgency})),symptomCodes:symptomIds,
-        timing,frequency,warnings,area:$('#detailArea').value.trim(),customerNotes:$('#detailNotes').value.trim(),partTier:partTier.label,
+        timing,frequency,warnings,startBehavior,area:$('#detailArea').value.trim(),customerNotes:$('#detailNotes').value.trim(),partTier:partTier.label,
         items:{parts,labor,extras},checks,urgent,
         assumptions:[
           'Semua angka merupakan rentang simulasi internal antarmuka, bukan harga pasar terverifikasi, daftar harga toko atau penawaran bengkel.',
           'Kecocokan part belum diverifikasi melalui VIN, nomor rangka, kode mesin atau katalog resmi kendaraan.',
-          'Part yang tampil adalah kandidat pemeriksaan. Tidak berarti semua part harus diganti.',
+          'Part dan jasa kandidat tidak dimasukkan ke total secara otomatis. Centang hanya item yang telah dikonfirmasi atau sengaja ingin disimulasikan.',
           'Biaya aktual dapat berbeda karena merek part, kualitas OEM/aftermarket, wilayah, tarif bengkel, pajak, stok dan hasil pemeriksaan fisik.',
           severity.note,
           'Biaya towing, pekerjaan lanjutan, pajak dan kerusakan tambahan belum termasuk kecuali ditampilkan sebagai item.'
         ]
       };
     }
+    function starterScenarioData(data) {
+      const relevant = data.vehicle.dbType === 'car' &&
+        data.subcategory === 'starting' &&
+        data.symptomCodes.some(id => ['c_no_start','c_hard_start'].includes(id));
+      if (!relevant) return null;
+
+      const behavior = data.startBehavior || 'unknown';
+      const behaviorLabels = {
+        unknown: 'Belum diketahui',
+        no_crank: 'Tidak ada putaran starter',
+        click: 'Terdengar klik, mesin tidak berputar',
+        slow_crank: 'Starter berputar pelan / berat',
+        crank_no_start: 'Starter memutar mesin normal, tetapi mesin tidak menyala',
+        intermittent: 'Kadang normal, kadang gagal'
+      };
+      const diagnosticChecks = {
+        no_crank: [
+          'Uji aki dengan battery tester / load test. Jangan langsung mengganti aki hanya karena mesin tidak mau hidup.',
+          'Periksa terminal aki, kabel massa, sekring utama, relay starter dan rangkaian tombol/kunci START.',
+          'Ukur voltage drop dan arus menuju solenoid serta motor starter sebelum memutuskan servis atau penggantian.'
+        ],
+        click: [
+          'Uji tegangan aki saat diberi beban dan periksa terminal serta kabel massa.',
+          'Periksa relay dan solenoid starter. Bunyi klik saja belum membuktikan dinamo starter rusak.',
+          'Ukur arus starter dan periksa koneksi sebelum membongkar motor starter.'
+        ],
+        slow_crank: [
+          'Uji kapasitas aki dan voltage drop pada kabel positif serta massa.',
+          'Periksa brush, komutator, armature dan bearing motor starter bila hasil pengukuran mengarah ke dinamo.',
+          'Pastikan tidak ada hambatan mekanis mesin sebelum menyimpulkan motor starter perlu diganti.'
+        ],
+        crank_no_start: [
+          'Periksa percikan api / sistem pengapian dan data immobilizer/kunci.',
+          'Uji tekanan dan suplai bahan bakar, relay serta pompa bahan bakar.',
+          'Baca DTC dan live data sensor yang relevan jika kendaraan mendukung OBD. Kode tidak boleh langsung diterjemahkan sebagai perintah mengganti sensor.'
+        ],
+        intermittent: [
+          'Catat apakah kegagalan terjadi saat mesin dingin, panas, setelah hujan atau setelah kendaraan lama dipakai.',
+          'Periksa konektor, terminal, kabel massa, relay, solenoid dan sambungan yang mungkin sensitif terhadap panas/getaran.',
+          'Lakukan tes arus dan tegangan saat gejala muncul bila memungkinkan.'
+        ],
+        unknown: [
+          'Tentukan terlebih dahulu apakah starter memutar mesin atau tidak.',
+          'Periksa aki, terminal dan kabel massa sebagai langkah awal.',
+          'Lanjutkan ke relay, solenoid, sistem pengapian atau bahan bakar sesuai hasil tes.'
+        ]
+      };
+
+      // Publicly published package benchmarks for car classes. These are
+      // repair-package ranges, not exact VIN-specific parts quotations.
+      const benchmark = {
+        lcgc: [
+          {id:'light',label:'Servis ringan',min:150000,max:250000,desc:'Pemeriksaan dan perbaikan ringan; cocok jika sumber masalah berupa koneksi/kotoran atau pekerjaan minor yang terkonfirmasi.'},
+          {id:'medium',label:'Servis lengkap',min:300000,max:500000,desc:'Pekerjaan servis starter lebih menyeluruh setelah komponen internal diperiksa.'},
+          {id:'heavy',label:'Penggantian satu unit starter',min:700000,max:1500000,desc:'Hanya bila unit tidak ekonomis diperbaiki atau kerusakan internal terbukti.'}
+        ],
+        compact: [
+          {id:'light',label:'Servis ringan',min:200000,max:350000,desc:'Kisaran kelompok mobil Jepang 1.3–1.5 L, termasuk Honda Jazz, untuk servis ringan.'},
+          {id:'medium',label:'Servis lengkap',min:400000,max:700000,desc:'Kisaran servis dinamo starter lengkap pada kelompok mobil Jepang 1.3–1.5 L.'},
+          {id:'heavy',label:'Penggantian satu unit starter',min:1000000,max:2000000,desc:'Kisaran penggantian unit untuk kelompok mobil Jepang 1.3–1.5 L. Kode unit wajib dicocokkan.'}
+        ],
+        large: [
+          {id:'light',label:'Servis ringan',min:300000,max:450000,desc:'Kisaran kelompok MPV/SUV besar untuk servis ringan.'},
+          {id:'medium',label:'Servis lengkap',min:600000,max:900000,desc:'Kisaran servis dinamo starter lengkap pada kelompok MPV/SUV besar.'},
+          {id:'heavy',label:'Penggantian satu unit starter',min:2000000,max:4000000,desc:'Kisaran penggantian unit pada kelompok MPV/SUV besar; tergantung kode dan merek part.'}
+        ]
+      };
+      const segment = data.vehicle.segment || 'compact';
+      const tiers = benchmark[segment] || benchmark.compact;
+      const recommended = ['light','medium','heavy'].includes(data.severity) ? data.severity : null;
+      return {
+        behavior,behaviorLabel:behaviorLabels[behavior] || behaviorLabels.unknown,
+        checks:diagnosticChecks[behavior] || diagnosticChecks.unknown,
+        tiers: behavior === 'crank_no_start' ? [] : tiers,
+        recommended,
+        sourceName:'Moladin, “Service Dinamo Starter Mobil”, 4 Desember 2025',
+        sourceUrl:'https://moladin.com/news/service-dinamo-starter/',
+        secondarySourceName:'Otospector, “Ternyata Start 150rb Biaya Servis Dinamo Starter Mobil”, 20 Maret 2026',
+        secondarySourceUrl:'https://otospector.co.id/blog/ternyata-start-150rb-biaya-servis-dinamo-starter',
+        diagnosticRange:[75000,150000],
+        note: behavior === 'crank_no_start'
+          ? 'Karena starter memutar mesin secara normal, jangan otomatis memasukkan biaya servis dinamo starter. Periksa pengapian, bahan bakar, immobilizer dan sensor terlebih dahulu.'
+          : 'Harga paket publik adalah pembanding tingkat pekerjaan, bukan quotation untuk VIN/nomor part kendaraan ini. Paket perbaikan tidak dijumlahkan ke total pemeriksaan awal dan bukan bukti bahwa dinamo starter rusak.'
+      };
+    }
+
+    function renderConditionScenarios(data) {
+      const panel = $('#detailConditionScenarios');
+      if (!panel) return;
+      const starter = starterScenarioData(data);
+      if (starter) {
+        const checks = starter.checks.map(item => `<div class="estimate-condition-check">${esc(item)}</div>`).join('');
+        const cards = starter.tiers.length ? `<div class="estimate-scenario-grid">${starter.tiers.map(tier => {
+          const chosen = starter.recommended === tier.id;
+          return `<article class="estimate-scenario-card ${chosen ? 'is-selected' : ''}">
+            <small>${tier.id === 'light' ? 'Kondisi ringan' : tier.id === 'medium' ? 'Kondisi sedang' : 'Kondisi berat'}</small>
+            <span class="scenario-tag">${esc(tier.label)}${chosen ? ' · sesuai pilihan' : ''}</span>
+            <strong>${money(tier.min)} – ${money(tier.max)}</strong>
+            <p>${esc(tier.desc)}</p>
+          </article>`;
+        }).join('')}</div>` : `<div class="estimate-note-warning">${esc(starter.note)}</div>`;
+        panel.innerHTML = `
+          <div class="estimate-condition-head">
+            <div><h4>Opsi biaya perbaikan menurut tingkat kondisi</h4><p>Perilaku starter yang dipilih: <strong>${esc(starter.behaviorLabel)}</strong>. Pilihan kondisi hanya menyorot skenario pembanding; tidak otomatis menyatakan komponen rusak.</p></div>
+            <span class="estimate-condition-status">${starter.recommended ? 'Skenario disorot: ' + esc(data.severityLabel) : 'Pilih kondisi untuk menyorot skenario'}</span>
+          </div>
+          ${cards}
+          <div class="estimate-condition-list">${checks}</div>
+          <div class="estimate-note-warning">${esc(starter.note)} Pemeriksaan awal terpisah pada ringkasan saat ini. Tanyakan bengkel apakah biaya pemeriksaan sudah termasuk dalam paket agar tidak dihitung dua kali.</div>
+          <div class="estimate-price-source">Referensi diagnosis awal mobil: <a href="https://reparasi-otomotif.com/servis-mobil/scan-diagnosa-mobil/" target="_blank" rel="noopener">scan mesin Rp75–150 ribu dan diagnosis lanjutan Rp150–250 ribu/jam</a>. Pembanding servis starter: <a href="${starter.sourceUrl}" target="_blank" rel="noopener">${esc(starter.sourceName)}</a> · <a href="${starter.secondarySourceUrl}" target="_blank" rel="noopener">${esc(starter.secondarySourceName)}</a>. Untuk kelompok Honda Jazz 1.3–1.5 L, artikel Moladin memuat kisaran servis ringan Rp200–350 ribu, servis lengkap Rp400–700 ribu, dan unit baru Rp1–2 juta. Harga aktual dan kode starter wajib diverifikasi bengkel.</div>`;
+        panel.hidden = false;
+        data.repairScenarios = starter;
+        return;
+      }
+
+      const conditionInfo = {
+        unknown: ['Kondisi belum terukur','Gunakan biaya pemeriksaan awal. Sistem tidak menambahkan penggantian part otomatis.'],
+        light: ['Penanganan ringan','Prioritaskan inspeksi, pembersihan, penyetelan atau perbaikan koneksi. Penggantian part hanya bila hasil tes menunjukkan kerusakan.'],
+        medium: ['Penanganan menengah','Pemeriksaan sub-komponen lebih rinci dapat diperlukan. Kandidat part dan jasa tetap belum dihitung sampai dipilih.'],
+        heavy: ['Penanganan berat','Mungkin memerlukan pembongkaran atau perbaikan lebih luas. Tingkat berat dari pengguna tidak membuktikan satu unit harus diganti.']
+      }[data.severity] || ['Kondisi belum terukur','Pemeriksaan langsung diperlukan.'];
+      panel.innerHTML = `
+        <div class="estimate-condition-head"><div><h4>Bagaimana kondisi memengaruhi biaya?</h4><p><strong>${esc(conditionInfo[0])}.</strong> ${esc(conditionInfo[1])}</p></div><span class="estimate-condition-status">${esc(data.severityLabel)}</span></div>
+        <div class="estimate-note-warning">Total saat ini hanya menjumlahkan pemeriksaan dan item yang dicentang. Kandidat part/jasa di bawah tidak ditambahkan otomatis. Untuk angka perbaikan yang lebih akurat, bengkel perlu memastikan hasil inspeksi, kode part dan ruang lingkup pekerjaan.</div>`;
+      panel.hidden = false;
+      data.repairScenarios = {mode:'general-condition-guide',severity:data.severity,severityLabel:data.severityLabel,description:conditionInfo[1]};
+    }
+
     function rowTable(rows, group) {
       if (!rows.length) return '<div class="estimate-empty-lines">Tidak ada item yang disarankan dari pilihan gejala ini.</div>';
       return `<div class="estimate-item-table-wrap"><table class="estimate-line-table"><thead><tr><th>Masukkan</th><th>Komponen / pekerjaan</th><th>Qty</th><th>Rentang simulasi</th></tr></thead><tbody>${rows.map((item,index)=>`
@@ -550,12 +692,15 @@
     }
     function renderBreakdown() {
       const t = currentTotals();
-      $('#detailPartSubtotal').textContent = `${money(t.parts.min)} – ${money(t.parts.max)}`;
-      $('#detailLaborSubtotal').textContent = `${money(t.labor.min)} – ${money(t.labor.max)}`;
+      const selectedParts = currentRows.parts.filter(x=>x.included !== false).length;
+      const selectedLabor = currentRows.labor.filter(x=>x.included !== false).length;
+      const selectedExtras = currentRows.extras.filter(x=>x.included !== false).length;
+      $('#detailPartSubtotal').textContent = selectedParts ? `${money(t.parts.min)} – ${money(t.parts.max)}` : (currentRows.parts.length ? 'Belum dipilih' : 'Tidak ada');
+      $('#detailLaborSubtotal').textContent = selectedLabor ? `${money(t.labor.min)} – ${money(t.labor.max)}` : (currentRows.labor.length ? 'Belum dipilih' : 'Tidak ada');
       $('#detailExtraSubtotal').textContent = `${money(t.extras.min)} – ${money(t.extras.max)}`;
       $('#detailTotalRange').textContent = `${money(t.total.min)} – ${money(t.total.max)}`;
       $('#detailTotalCard').textContent = `${money(t.total.min)} – ${money(t.total.max)}`;
-      $('#detailItemCount').textContent = `${currentRows.parts.filter(x=>x.included).length} part dihitung · ${currentRows.labor.filter(x=>x.included).length} jasa dihitung · ${currentRows.extras.filter(x=>x.included).length} biaya tambahan`;
+      $('#detailItemCount').textContent = `${currentRows.parts.length} kandidat part · ${selectedParts} dipilih · ${currentRows.labor.length} kandidat jasa · ${selectedLabor} dipilih · ${selectedExtras} pemeriksaan/tambahan dihitung`;
       if (latestResult) {
         latestResult.items = currentRows;
         latestResult.subtotals = t;
@@ -565,17 +710,22 @@
     function renderResult(data) {
       const t = currentTotals();
       $('#detailResultVehicle').textContent = `${data.vehicle.brand} ${data.vehicle.model} · ${data.vehicle.year} · ${data.vehicle.type} · ${Number(data.vehicle.odometer || 0).toLocaleString('id-ID')} km`;
-      $('#detailResultSummary').textContent = `${data.categoryLabel} / ${data.subcategoryLabel}. Gejala: ${data.symptoms.map(s=>s.label).join('; ')}.`;
+      $('#detailResultSummary').textContent = `${data.categoryLabel} / ${data.subcategoryLabel}. Gejala: ${data.symptoms.map(s=>s.label).join('; ')}.${data.startBehavior && data.startBehavior !== 'unknown' ? ' Respons starter: ' + ({no_crank:'tidak berputar',click:'bunyi klik',slow_crank:'berputar pelan',crank_no_start:'berputar normal tetapi mesin tidak menyala',intermittent:'kadang gagal'}[data.startBehavior] || data.startBehavior) + '.' : ''}`;
       $('#detailPartsRows').innerHTML = rowTable(currentRows.parts,'parts');
       $('#detailLaborRows').innerHTML = rowTable(currentRows.labor,'labor');
       $('#detailExtrasRows').innerHTML = rowTable(currentRows.extras,'extras');
       $('#detailChecks').innerHTML = data.checks.map(c=>`<div class="estimate-inspection-item">${esc(c)}</div>`).join('');
       $('#detailAssumptions').innerHTML = data.assumptions.map(a=>`<li>${esc(a)}</li>`).join('');
       $('#detailUrgency').innerHTML = data.urgent
-        ? '<span class="urgency-pill urgency-high">Perlu pemeriksaan segera</span><p>Jika gejala berkaitan rem gagal, ban rusak, mesin overheat, kebocoran bahan bakar atau kendali kendaraan, hentikan penggunaan di tempat aman dan minta bantuan profesional.</p>'
-        : '<span class="urgency-pill">Perlu verifikasi bengkel</span><p>Gunakan daftar ini sebagai panduan diskusi. Jadwalkan inspeksi dan minta penjelasan sebelum menyetujui penggantian part.</p>';
+        ? '<span class="urgency-pill urgency-high">Perlu pemeriksaan segera</span><p>Jika ada rem gagal, ban rusak, overheat, kebocoran bahan bakar atau kendali kendaraan terganggu, hentikan penggunaan di tempat aman dan minta bantuan profesional.</p>'
+        : data.symptomCodes.some(id=>['c_no_start','m_no_start'].includes(id))
+          ? '<span class="urgency-pill">Kendaraan gagal menyala</span><p>Jangan memaksa starter berulang kali dalam waktu lama. Lakukan pemeriksaan aki, terminal dan rangkaian starter. Penyebab belum dapat dipastikan dari gejala saja.</p>'
+          : '<span class="urgency-pill">Perlu verifikasi bengkel</span><p>Gunakan daftar ini sebagai panduan diskusi. Jadwalkan inspeksi dan minta penjelasan sebelum menyetujui penggantian part.</p>';
+      renderConditionScenarios(data);
       $('#detailRecommendation').textContent = data.urgent
         ? 'Utamakan keselamatan. Jangan lanjut berkendara jika gejala memengaruhi rem, ban, kemudi, kebocoran bahan bakar atau temperatur mesin. Pindahkan kendaraan ke tempat aman dan minta bantuan mekanik/towing.'
+        : data.symptomCodes.some(id=>['c_no_start','m_no_start'].includes(id))
+          ? 'Jangan langsung menyetujui penggantian dinamo starter, aki atau pompa bensin. Minta bengkel menguji aki, terminal/kabel massa, relay, arus starter, lalu sistem pengapian dan bahan bakar sesuai perilaku saat distarter.'
         : data.severity === 'heavy'
           ? 'Jadwalkan pemeriksaan langsung secepatnya. Minta mekanik memeriksa item pada checklist, menunjukkan hasil ukur dan mengonfirmasi kode part sebelum membuat penawaran final.'
           : data.severity === 'medium'
@@ -595,12 +745,21 @@
       try {
         const data = calculate();
         const computed = createRows(typeEl.value,data.symptoms,PART_TIERS[$('#detailPartTier').value].factor,(SEGMENTS[typeEl.value].find(s=>s[0] === $('#detailSegment').value)||[null,null,1])[2],SEVERITY[data.severity].labor);
-        currentRows = {parts:computed.parts,labor:computed.labor,extras:[]};
+        // Candidate parts and repair labour are deliberately unchecked by default.
+        // The initial total must not add every possible failure path together.
+        currentRows = {
+          parts: computed.parts.map(item=>({...item,included:false})),
+          labor: computed.labor.map(item=>({...item,included:false})),
+          extras: []
+        };
         const kind = typeEl.value, factor=(SEGMENTS[kind].find(s=>s[0]===data.vehicle.segment)||[null,null,1])[2], ex=EXTRAS[kind];
-        if ($('#includeInspection').checked) currentRows.extras.push({id:'inspection_extra',name:'Pemeriksaan awal dan dokumentasi kondisi',note:'Inspeksi awal; dapat digabung dengan jasa utama.',unit:'paket',qty:1,included:true,min:round(ex.inspection[0]*factor),max:round(ex.inspection[1]*factor)});
-        if ($('#includeScanner').checked && ex.scanner[1]) currentRows.extras.push({id:'scanner_extra',name:'Scan ECU / OBD',note:'Bila kendaraan mendukung; kode harus ditafsirkan bersama pemeriksaan fisik.',unit:'paket',qty:1,included:true,min:round(ex.scanner[0]*factor),max:round(ex.scanner[1]*factor)});
-        if ($('#includeRoadTest').checked) currentRows.extras.push({id:'road_test',name:'Uji jalan terkontrol',note:'Hanya dilakukan jika kendaraan dinilai aman.',unit:'paket',qty:1,included:true,min:round(ex.roadTest[0]*factor),max:round(ex.roadTest[1]*factor)});
-        if ($('#includeConsumables').checked) currentRows.extras.push({id:'consumables',name:'Bahan pendukung / consumables',note:'Cleaner, grease, washer atau bahan kecil sesuai pekerjaan.',unit:'paket',qty:1,included:true,min:round(ex.consumables[0]*factor),max:round(ex.consumables[1]*factor)});
+        if ($('#includeInspection').checked) {
+          const isStarterCheck = data.subcategory === 'starting' && data.vehicle.dbType === 'car';
+          currentRows.extras.push({id:'inspection_extra',name:isStarterCheck?'Pemeriksaan awal dan diagnosis sistem starter':'Pemeriksaan awal dan pencatatan keluhan',note:'Biaya pemeriksaan/diagnosis awal saja. Scan OBD tidak otomatis diperlukan dan penggantian komponen belum termasuk.',unit:'paket',qty:1,included:true,min:round(ex.inspection[0]*factor),max:round(ex.inspection[1]*factor)});
+        }
+        if ($('#includeScanner').checked && ex.scanner[1] > 0) currentRows.extras.push({id:'scanner_extra',name:'Scan ECU / OBD bila diperlukan',note:'Tidak selalu relevan untuk kondisi starter tidak berputar. Kode harus ditafsirkan bersama pengujian fisik.',unit:'paket',qty:1,included:true,min:round(ex.scanner[0]*factor),max:round(ex.scanner[1]*factor)});
+        if ($('#includeRoadTest').checked) currentRows.extras.push({id:'road_test',name:'Uji jalan terkontrol',note:'Hanya dilakukan jika kendaraan telah dinyatakan aman.',unit:'paket',qty:1,included:true,min:round(ex.roadTest[0]*factor),max:round(ex.roadTest[1]*factor)});
+        if ($('#includeConsumables').checked) currentRows.extras.push({id:'consumables',name:'Bahan pendukung / consumables',note:'Hanya dimasukkan bila benar-benar digunakan dalam pekerjaan.',unit:'paket',qty:1,included:true,min:round(ex.consumables[0]*factor),max:round(ex.consumables[1]*factor)});
         latestResult = data;
         latestResult.items = currentRows;
         latestResult.subtotals = currentTotals();
@@ -649,7 +808,8 @@
     $('#copyDetailedEstimate')?.addEventListener('click', async () => {
       if(!latestResult) return;
       const r=latestResult, rows=[...currentRows.parts,...currentRows.labor,...currentRows.extras].filter(x=>x.included);
-      const text=['BENGKELINAI — RINCIAN ESTIMASI SIMULASI',`${r.vehicle.brand} ${r.vehicle.model} ${r.vehicle.year} · ${r.vehicle.type}`,`${r.categoryLabel} / ${r.subcategoryLabel}`,`Gejala: ${r.symptoms.map(x=>x.label).join(', ')}`,'',...rows.map(x=>`- ${x.name} (${x.qty} ${x.unit}): ${money(x.min*x.qty)} – ${money(x.max*x.qty)}`),'',`TOTAL: ${money(r.total.min)} – ${money(r.total.max)}`,'','Harga simulasi, bukan penawaran resmi. Kandidat part harus diverifikasi mekanik.'].join('\n');
+      const scenarioLines = r.repairScenarios?.tiers?.length ? ['', 'OPSI PAKET PERBAIKAN ALTERNATIF (TIDAK DIJUMLAHKAN KE TOTAL PEMERIKSAAN)', ...r.repairScenarios.tiers.map(t=>`- ${t.label}: ${money(t.min)} – ${money(t.max)}`)] : [];
+      const text=['BENGKELINAI — RINCIAN ESTIMASI',`${r.vehicle.brand} ${r.vehicle.model} ${r.vehicle.year} · ${r.vehicle.type}`,`${r.categoryLabel} / ${r.subcategoryLabel}`,`Gejala: ${r.symptoms.map(x=>x.label).join(', ')}`,'', 'ITEM YANG DIMASUKKAN KE TOTAL:', ...rows.map(x=>`- ${x.name} (${x.qty} ${x.unit}): ${money(x.min*x.qty)} – ${money(x.max*x.qty)}`), ...scenarioLines,'',`TOTAL ITEM TERPILIH: ${money(r.total.min)} – ${money(r.total.max)}`,'','Harga paket merupakan pembanding publik/ilustratif, bukan quotation untuk VIN tertentu. Verifikasi bengkel sebelum menyetujui penggantian.'].join('\n');
       try { await navigator.clipboard.writeText(text); toast('Rincian berhasil disalin.'); }
       catch { $('#detailSaveStatus').textContent='Browser tidak mengizinkan clipboard. Gunakan fitur cetak/PDF.'; }
     });
@@ -752,6 +912,5 @@
 
   document.addEventListener('DOMContentLoaded',()=>{
     initEstimator();
-    initChatAssistant();
   });
 })();
